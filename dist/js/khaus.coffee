@@ -99,6 +99,11 @@ do ($=jQuery) ->
                 setTimeout(->
                     window.location = window.khaus.redirect[0]
                 , window.khaus.redirect[1])
+            else if $.isPlainObject(window.khaus.redirect)
+                $.each window.khaus.redirect, (url, tiempo)->
+                    setTimeout(->
+                        window.location = url
+                    , tiempo)
             else
                 window.location = window.khaus.redirect
         $.khausLaunchAlerts()
@@ -167,13 +172,17 @@ do ($=jQuery) ->
                 warning : "Importante"
                 info    : "Informaci&oacute;n"
         , settings
-
         $.each o.title, (key, value)->
             if !!window.khaus[key]
                 if $.isArray(window.khaus[key])
                     $.khausNotify(window.khaus[key][0], window.khaus[key][1], {
                         template : key
                     })
+                else if $.isPlainObject(window.khaus[key])
+                    $.each window.khaus[key], (titulo, mensaje)->
+                        $.khausNotify(titulo, mensaje, {
+                            template : key
+                        })
                 else
                     $.khausNotify(value, window.khaus[key], {
                         template : key

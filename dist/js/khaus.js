@@ -116,6 +116,12 @@
         setTimeout(function() {
           return window.location = window.khaus.redirect[0];
         }, window.khaus.redirect[1]);
+      } else if ($.isPlainObject(window.khaus.redirect)) {
+        $.each(window.khaus.redirect, function(url, tiempo) {
+          return setTimeout(function() {
+            return window.location = url;
+          }, tiempo);
+        });
       } else {
         window.location = window.khaus.redirect;
       }
@@ -202,6 +208,12 @@
         if ($.isArray(window.khaus[key])) {
           $.khausNotify(window.khaus[key][0], window.khaus[key][1], {
             template: key
+          });
+        } else if ($.isPlainObject(window.khaus[key])) {
+          $.each(window.khaus[key], function(titulo, mensaje) {
+            return $.khausNotify(titulo, mensaje, {
+              template: key
+            });
           });
         } else {
           $.khausNotify(value, window.khaus[key], {
