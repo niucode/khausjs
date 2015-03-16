@@ -1,0 +1,25 @@
+{
+  "name": "khausjs",
+  "version": "0.1",
+  "homepage": "https://github.com/Niucode/khausjs",
+  "authors": [
+    "rhyudek1 <rhyudek1@gmail.com>"
+  ],
+  "description": "Front End components compatible with laravel 5",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery-deparam": "~0.2.0",
+    "jquery-form": "~3.46.0",
+    "lesshat": "~3.0.2"
+  },
+  "devDependencies": {
+    "lesshat": "~3.0.2"
+  }
+}

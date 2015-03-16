@@ -1,0 +1,105 @@
+@import '../../bower_components/lesshat/build/lesshat';
+@import 'variables';
+.cubic-bezier (@time: 500ms, @p1, @p2, @p3, @p4) {
+	-webkit-transition: all @time cubic-bezier(@p1, @p2, @p3, @p4);
+	   -moz-transition: all @time cubic-bezier(@p1, @p2, @p3, @p4);
+	    -ms-transition: all @time cubic-bezier(@p1, @p2, @p3, @p4);
+	     -o-transition: all @time cubic-bezier(@p1, @p2, @p3, @p4);
+	        transition: all @time cubic-bezier(@p1, @p2, @p3, @p4);
+}
+.khaus-notify-container {
+	position: fixed;
+	z-index: 99999;
+	height: auto;
+	width: 300px;
+	bottom: 10px;
+	right: -360px;
+}
+.khaus-notify {
+	span {
+		vertical-align: top;
+	}
+	.box-shadow(0 2px 2px 0 rgba(82,90,104,0.2));
+	border: 1px solid rgba(255,255,255,0.5);
+	cursor: pointer;
+	font-size: 14px;
+	font-weight: 300;
+	margin: 15px;
+	margin-bottom: 10px;
+	padding: 15px;
+	word-wrap: break-word;
+	&.khaus-notify-default {
+		background-color: @default-background;
+		border-color: @default-border;
+		color: @default-text;
+	}
+	&.khaus-notify-inverse {
+		background-color: @inverse-background;
+		border-color: @inverse-border;
+		color: @inverse-text;
+	}
+	&.khaus-notify-primary {
+		background-color: @primary-background;
+		border-color: @primary-border;
+		color: @primary-text;
+	}
+	&.khaus-notify-success {
+		background-color: @success-background;
+		border-color: @success-border;
+		color: @success-text;
+	}
+	&.khaus-notify-info {
+		background-color: @info-background;
+		border-color: @info-border;
+		color: @info-text;
+	}
+	&.khaus-notify-warning {
+		background-color: @warning-background;
+		border-color: @warning-border;
+		color: @warning-text;
+	}
+	&.khaus-notify-danger {
+		background-color: @danger-background;
+		border-color: @danger-border;
+		color: @danger-text;
+	}
+	.text-container {
+		display: inline-block;
+		width: 182px;
+		.title {
+			font-weight: 400;
+		}
+	}
+	.icon-container {
+		border: 1px solid rgba(255,255,255,0.5);
+		.border-radius(50%);
+		display: inline-block;
+		height: 40px;
+		margin-right: 12px;
+		vertical-align: top;
+		width: 41px;
+	}
+	.fa {
+		font-size: 16px;
+		padding-top: 11px;
+		padding-left: 12px;
+	}
+	&.khaus-notify-show {
+		.cubic-bezier(500ms, 0.175, 0.885, 0.320, 1.275);
+		.translate(-360px, 0);
+	}
+	&.khaus-notify-hide {
+		.cubic-bezier(250ms, 0.600, -0.280, 0.735, 0.045);
+		.translate(360px, 0);
+	}
+}
+.tooltip {
+	z-index: 999999999;
+}
+
+.khaus-ajax-wait {
+	cursor: wait !important;
+	* {
+		cursor: wait !important;
+	}
+}
