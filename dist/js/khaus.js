@@ -97,18 +97,18 @@
           badge.appendTo(tab);
         }
         badge.text(parseInt(badge.text()) + 1);
-        switch (o.displayErrors) {
-          case 'block':
-            return $("<span>", {
-              "class": "help-block"
-            }).html(value).insertAfter(input);
-          case 'tooltip':
-            return input.tooltip({
-              placement: "top",
-              title: value,
-              container: "body"
-            });
-        }
+      }
+      switch (o.errorsType) {
+        case 'block':
+          return $("<span>", {
+            "class": "help-block"
+          }).html(value).insertAfter(input);
+        case 'tooltip':
+          return input.tooltip({
+            placement: "top",
+            title: value,
+            container: "body"
+          });
       }
     });
     $.khausLaunchAlerts();

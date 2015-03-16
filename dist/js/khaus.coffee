@@ -85,15 +85,15 @@ do ($=jQuery) ->
                     badge = $('<span>', 'class':'badge').text 0
                     badge.appendTo tab
                 badge.text parseInt(badge.text()) + 1
-                switch o.displayErrors
-                    when 'block'
-                        $("<span>", "class":"help-block").html(value).insertAfter input
-                    when 'tooltip'
-                        input.tooltip(
-                            placement : "top"
-                            title     : value
-                            container : "body"
-                        )
+            switch o.errorsType
+                when 'block'
+                    $("<span>", "class":"help-block").html(value).insertAfter input
+                when 'tooltip'
+                    input.tooltip(
+                        placement : "top"
+                        title     : value
+                        container : "body"
+                    )
         $.khausLaunchAlerts()
         if counter is 0
             if o.resetForm
