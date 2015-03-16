@@ -280,6 +280,7 @@ do ($=jQuery) ->
                         if o.reload
                             window.location.reload()
                     error: (response, status, xhr, $form)->
+                        console.debug response
                         $.khausCleanFormErrors($form)
                         if typeof response.responseJSON isnt 'undefined'
                             errors = response.responseJSON

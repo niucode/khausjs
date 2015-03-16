@@ -390,6 +390,7 @@
           },
           error: function(response, status, xhr, $form) {
             var errors;
+            console.debug(response);
             $.khausCleanFormErrors($form);
             if (typeof response.responseJSON !== 'undefined') {
               errors = response.responseJSON;

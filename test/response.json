@@ -1,6 +1,4 @@
 {
-	"responseJSON" : {
-		"khausDanger" : "Prueba de mensaje de error",
-		"email" : ["el email es invalido"]
-	}
+	"khausDanger" : "Prueba de mensaje de error",
+	"email" : ["el email es invalido"]
 }
