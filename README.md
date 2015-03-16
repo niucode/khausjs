@@ -1,8 +1,22 @@
 Khaus JS
 =======
-**Front End components compatible with laravel 5**
+**Componentes de Khaus compatibles con Laravel 5**
 
-Add this code into layout, just before `</body>` tag
+#### Dependencias
+* jquery
+* lesshat
+* jquery-form
+* jquery-deparam
+
+
+#### Instalación
+
+* Bower
+```bash
+$ bower install khausjs --save
+```
+
+Inserta este código justo antes de la etiqueta `</body>` en el layout de tu proyecto
 
 ```javascript
 <script>
