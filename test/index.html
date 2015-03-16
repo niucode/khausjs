@@ -18,7 +18,7 @@
         <div class="row">
             <div class="col-sm-6 col-sm-offset-3">
                 <h2 class="page-header">Formulario de prueba</h2>
-                <form action="response.php" method="post" name="form-test" class="khaus-form">
+                <form action="response.php" method="post" name="form-test" class="khaus-form" data-khaus-reset="true">
                     <div class="form-group">
                         <label for="email" class="control-label">Email</label>
                         <input type="text" class="form-control" name="email">
@@ -37,7 +37,7 @@
 
     <script>
         window.khaus = {
-            token : "xVr8aARQ1xzArRGgx31gG5ug07EjieSEqtndzNYC",
+            token : "randomstring",
             form : "",
             errors : [],
             warning : "",
@@ -45,7 +45,7 @@
             success : "",
             info : "",
         }
-        window.baseURL = "http://localhost/santamota/public/";
+        window.baseURL = "http://localhost/khausjs/test/";
         window.segment = [""];
         </script>
 

@@ -57,16 +57,28 @@
     $(form).find("span.help-block").remove();
     return $(form).find(":input").tooltip("destroy");
   };
-  $.khausDisplayFormErrors = function(type, form, errors) {
-    var counter, err;
-    err = errors || window.khaus.errors;
+  $.khausDisplayFormErrors = function(settings) {
+    var counter, o;
+    o = $.extend({
+      errorsType: 'block',
+      form: null,
+      errors: window.khaus.errors,
+      resetForm: false
+    }, settings);
     counter = 0;
-    return $.each(err, function(key, value) {
+    $.each(o.errors, function(key, value) {
       var badge, inTab, input, page, pageName, tab;
+      if (key.match(/^khaus/)) {
+        key = key.replace('khaus', '').toLowerCase();
+        if (typeof window.khaus[key] !== 'undefined') {
+          window.khaus[key] = value;
+          return true;
+        }
+      }
       counter++;
-      input = $(form).find(":input[name=" + key + "]");
+      input = $(o.form).find(":input[name=" + key + "]");
       if (input.size() !== 1) {
-        input = $(form).find(":input[name^='" + key + "[']");
+        input = $(o.form).find(":input[name^='" + key + "[']");
       }
       input.parents('.form-group').addClass("has-error");
       inTab = input.parents('.tab-content');
@@ -85,20 +97,26 @@
           badge.appendTo(tab);
         }
         badge.text(parseInt(badge.text()) + 1);
-      }
-      switch (type) {
-        case 'block':
-          return $("<span>", {
-            "class": "help-block"
-          }).html(value).insertAfter(input);
-        case 'tooltip':
-          return input.tooltip({
-            placement: "top",
-            title: value,
-            container: "body"
-          });
+        switch (o.displayErrors) {
+          case 'block':
+            return $("<span>", {
+              "class": "help-block"
+            }).html(value).insertAfter(input);
+          case 'tooltip':
+            return input.tooltip({
+              placement: "top",
+              title: value,
+              container: "body"
+            });
+        }
       }
     });
+    $.khausLaunchAlerts();
+    if (counter === 0) {
+      if (o.resetForm) {
+        return $(o.form)[0].reset();
+      }
+    }
   };
   $.khausNotify = function(title, message, settings) {
     var container, icon, icon_cont, message_cont, message_title, notify, o;
@@ -152,7 +170,10 @@
     var form;
     if (!!window.khaus.errors && !!window.khaus.form) {
       form = $("form[name=" + window.khaus.form + "]");
-      return $.khausDisplayFormErrors('block', form);
+      return $.khausDisplayFormErrors({
+        errorsType: 'block',
+        form: form
+      });
     }
   };
   $.khausLaunchAlerts = function(settings) {
@@ -167,26 +188,14 @@
         info: "Informaci&oacute;n"
       }
     }, settings);
-    if (!!window.khaus.warning) {
-      $.khausNotify(o.title.warning, window.khaus.warning, {
-        template: 'warning'
-      });
-    }
-    if (!!window.khaus.danger) {
-      $.khausNotify(o.title.danger, window.khaus.danger, {
-        template: 'danger'
-      });
-    }
-    if (!!window.khaus.success) {
-      $.khausNotify(o.title.success, window.khaus.success, {
-        template: 'success'
-      });
-    }
-    if (!!window.khaus.info) {
-      return $.khausNotify(o.title.info, window.khaus.info, {
-        template: 'info'
-      });
-    }
+    return $.each(o.title, function(key, value) {
+      if (!!window.khaus[key]) {
+        $.khausNotify(value, window.khaus[key], {
+          template: key
+        });
+        return window.khaus[key] = '';
+      }
+    });
   };
   $.khausAjaxWait = function(settings) {
     var o;
@@ -372,41 +381,27 @@
     return modal_D1.modal("show");
   };
   $.fn.khausForm = function(settings) {
-    var o;
-    o = $.extend({
-      errors: 'block',
-      reload: true
-    }, settings);
     return $.each(this, function() {
       var form;
       form = $(this);
       return form.on('submit', function(ev) {
         return form.ajaxForm({
           delegation: true,
-          success: function(response, status, xhr, $form) {
-            if (o.reload) {
-              return window.location.reload();
-            }
-          },
+          success: function(response, status, xhr, $form) {},
           error: function(response, status, xhr, $form) {
             var errors;
-            console.debug(response);
             $.khausCleanFormErrors($form);
             if (typeof response.responseJSON !== 'undefined') {
               errors = response.responseJSON;
             } else {
               errors = $.parseJSON(response.responseText);
             }
-            $.each(errors, function(key, value) {
-              if (key.match(/^khaus/)) {
-                key = key.replace('khaus', '').toLowerCase();
-                if (typeof window.khaus[key] !== 'undefined') {
-                  return window.khaus[key] = value;
-                }
-              }
+            return $.khausDisplayFormErrors({
+              errorsType: form.data('khaus-errortype') || 'block',
+              form: $form,
+              errors: errors,
+              resetForm: form.data('khaus-reset') || false
             });
-            $.khausLaunchAlerts();
-            return $.khausDisplayFormErrors(o.errors, $form, errors);
           }
         });
       });

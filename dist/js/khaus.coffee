@@ -52,14 +52,24 @@ do ($=jQuery) ->
     #
     # En caso de que no se envie el parametro errors, buscara esos datos
     # dentro de la variable global khaus
-    $.khausDisplayFormErrors = (type, form, errors)->
-        err = errors or window.khaus.errors
+    $.khausDisplayFormErrors = (settings)->
+        o = $.extend
+            errorsType : 'block'
+            form : null
+            errors : window.khaus.errors
+            resetForm : false
+        , settings
         counter = 0
-        $.each err, (key, value)->
+        $.each o.errors, (key, value)->
+            if key.match /^khaus/
+                key = key.replace('khaus', '').toLowerCase()
+                if typeof window.khaus[key] isnt 'undefined'
+                    window.khaus[key] = value
+                    return true
             counter++
-            input = $(form).find(":input[name=#{key}]")
+            input = $(o.form).find(":input[name=#{key}]")
             if input.size() isnt 1 # si no lo encuentra busca inputs array[]
-                input = $(form).find(":input[name^='#{key}[']")
+                input = $(o.form).find(":input[name^='#{key}[']")
             input.parents('.form-group').addClass "has-error"
             # si el input se encuentra dentro del un formulario tabulado
             inTab = input.parents('.tab-content')
@@ -75,15 +85,21 @@ do ($=jQuery) ->
                     badge = $('<span>', 'class':'badge').text 0
                     badge.appendTo tab
                 badge.text parseInt(badge.text()) + 1
-            switch type
-                when 'block'
-                    $("<span>", "class":"help-block").html(value).insertAfter input
-                when 'tooltip'
-                    input.tooltip(
-                        placement : "top"
-                        title     : value
-                        container : "body"
-                    )
+                switch o.displayErrors
+                    when 'block'
+                        $("<span>", "class":"help-block").html(value).insertAfter input
+                    when 'tooltip'
+                        input.tooltip(
+                            placement : "top"
+                            title     : value
+                            container : "body"
+                        )
+        $.khausLaunchAlerts()
+        if counter is 0
+            if o.resetForm
+                $(o.form)[0].reset()
+
+
 
     # ===== DESPLEGA UNA ALARTA O NOTIFICACION FLOTANTE =====
     # @param string title - titulo de la notificacion
@@ -128,7 +144,10 @@ do ($=jQuery) ->
     $.khausLaunchFormErrors = ()->
         if !!window.khaus.errors and !!window.khaus.form
             form = $("form[name=#{window.khaus.form}]")
-            $.khausDisplayFormErrors('block', form)
+            $.khausDisplayFormErrors(
+                errorsType: 'block'
+                form: form
+            )
 
     # ===== =====
     $.khausLaunchAlerts = (settings) ->
@@ -141,23 +160,14 @@ do ($=jQuery) ->
                 warning : "Importante"
                 info    : "Informaci&oacute;n"
         , settings
-        if !!window.khaus.warning
-            $.khausNotify(o.title.warning, window.khaus.warning, {
-                template : 'warning'
-            })
-        if !!window.khaus.danger
-            $.khausNotify(o.title.danger, window.khaus.danger, {
-                template : 'danger'
-            })
-        if !!window.khaus.success
-            $.khausNotify(o.title.success, window.khaus.success, {
-                template : 'success'
-            })
-        if !!window.khaus.info
-            $.khausNotify(o.title.info, window.khaus.info, {
-                template : 'info'
-            })
-        
+
+        $.each o.title, (key, value)->
+            if !!window.khaus[key]
+                $.khausNotify(value, window.khaus[key], {
+                    template : key
+                })
+                window.khaus[key] = ''
+
     $.khausAjaxWait = (settings)->
         o = $.extend
             type : 'cursor'
@@ -267,32 +277,26 @@ do ($=jQuery) ->
     # ===== CAMBIA EL FUNCIONAMIENTO DE LOS FORMULARIOS POR PETICIONES AJAX =====
     # 
     $.fn.khausForm = (settings)->
-        o = $.extend
-            errors : 'block' # block|tooltip
-            reload : true
-        , settings
         $.each @, ()->
             form = $(@)
             form.on 'submit', (ev)->
                 form.ajaxForm
                     delegation: true
                     success: (response, status, xhr, $form)->
-                        if o.reload
-                            window.location.reload()
+                        #if form.data('khaus-reload') || false
+                        #    window.location.reload()
                     error: (response, status, xhr, $form)->
-                        console.debug response
                         $.khausCleanFormErrors($form)
                         if typeof response.responseJSON isnt 'undefined'
                             errors = response.responseJSON
                         else
                             errors = $.parseJSON(response.responseText)
-                        $.each errors, (key, value)->
-                            if key.match /^khaus/
-                                key = key.replace('khaus', '').toLowerCase()
-                                if typeof window.khaus[key] isnt 'undefined'
-                                    window.khaus[key] = value
-                        $.khausLaunchAlerts()
-                        $.khausDisplayFormErrors(o.errors, $form, errors)
+                        $.khausDisplayFormErrors(
+                            errorsType: form.data('khaus-errortype') || 'block'
+                            form: $form
+                            errors: errors
+                            resetForm: form.data('khaus-reset') || false
+                        )
 
     $.fn.khausNumberFormat = ()->
         replace = (number)->
