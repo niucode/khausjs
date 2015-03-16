@@ -94,18 +94,6 @@ do ($=jQuery) ->
                         title     : value
                         container : "body"
                     )
-        if window.khaus.redirect isnt ""
-            if $.isArray(window.khaus.redirect)
-                setTimeout(->
-                    window.location = window.khaus.redirect[0]
-                , window.khaus.redirect[1])
-            else if $.isPlainObject(window.khaus.redirect)
-                $.each window.khaus.redirect, (url, tiempo)->
-                    setTimeout(->
-                        window.location = url
-                    , tiempo)
-            else
-                window.location = window.khaus.redirect
         $.khausLaunchAlerts()
         if counter is 0
             if o.resetForm
@@ -304,8 +292,26 @@ do ($=jQuery) ->
                 form.ajaxForm
                     delegation: true
                     success: (response, status, xhr, $form)->
-                        #if form.data('khaus-reload') || false
-                        #    window.location.reload()
+                        $.each response, (key, value)->
+                            if key.match /^khaus/
+                                key = key.replace('khaus', '').toLowerCase()
+                                if typeof window.khaus[key] isnt 'undefined'
+                                    window.khaus[key] = value
+                        $.khausLaunchAlerts()
+                        if window.khaus.redirect isnt ""
+                            if form.data('khaus-reset') || false
+                                $($form)[0].reset()
+                            if $.isArray(window.khaus.redirect)
+                                setTimeout(->
+                                    window.location = window.khaus.redirect[0]
+                                , window.khaus.redirect[1])
+                            else if $.isPlainObject(window.khaus.redirect)
+                                $.each window.khaus.redirect, (url, tiempo)->
+                                    setTimeout(->
+                                        window.location = url
+                                    , tiempo)
+                            else
+                                window.location = window.khaus.redirect
                     error: (response, status, xhr, $form)->
                         $.khausCleanFormErrors($form)
                         if typeof response.responseJSON isnt 'undefined'

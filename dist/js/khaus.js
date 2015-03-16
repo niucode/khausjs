@@ -111,21 +111,6 @@
           });
       }
     });
-    if (window.khaus.redirect !== "") {
-      if ($.isArray(window.khaus.redirect)) {
-        setTimeout(function() {
-          return window.location = window.khaus.redirect[0];
-        }, window.khaus.redirect[1]);
-      } else if ($.isPlainObject(window.khaus.redirect)) {
-        $.each(window.khaus.redirect, function(url, tiempo) {
-          return setTimeout(function() {
-            return window.location = url;
-          }, tiempo);
-        });
-      } else {
-        window.location = window.khaus.redirect;
-      }
-    }
     $.khausLaunchAlerts();
     if (counter === 0) {
       if (o.resetForm) {
@@ -414,7 +399,35 @@
       return form.on('submit', function(ev) {
         return form.ajaxForm({
           delegation: true,
-          success: function(response, status, xhr, $form) {},
+          success: function(response, status, xhr, $form) {
+            $.each(response, function(key, value) {
+              if (key.match(/^khaus/)) {
+                key = key.replace('khaus', '').toLowerCase();
+                if (typeof window.khaus[key] !== 'undefined') {
+                  return window.khaus[key] = value;
+                }
+              }
+            });
+            $.khausLaunchAlerts();
+            if (window.khaus.redirect !== "") {
+              if (form.data('khaus-reset') || false) {
+                $($form)[0].reset();
+              }
+              if ($.isArray(window.khaus.redirect)) {
+                return setTimeout(function() {
+                  return window.location = window.khaus.redirect[0];
+                }, window.khaus.redirect[1]);
+              } else if ($.isPlainObject(window.khaus.redirect)) {
+                return $.each(window.khaus.redirect, function(url, tiempo) {
+                  return setTimeout(function() {
+                    return window.location = url;
+                  }, tiempo);
+                });
+              } else {
+                return window.location = window.khaus.redirect;
+              }
+            }
+          },
           error: function(response, status, xhr, $form) {
             var errors;
             $.khausCleanFormErrors($form);
