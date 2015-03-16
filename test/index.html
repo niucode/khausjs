@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link media="all" type="text/css" rel="stylesheet" href="../dist/css/khaus.css">
+        <link media="all" type="text/css" rel="stylesheet" href="../bower_components/bootstrap/dist/css/bootstrap.min.css">
+    </head>
+    <body>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-6 col-sm-offset-3">
+                <h2 class="page-header">Formulario de prueba</h2>
+                <form action="response.json" method="post" name="form-test" class="khaus-form">
+                    <div class="form-group">
+                        <label for="email" class="control-label">Email</label>
+                        <input type="text" class="form-control" name="email">
+                    </div>
+                    <div class="form-group">
+                        <label for="password" class="control-label">Password</label>
+                        <input type="password" class="form-control" name="password">
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" value="Enviar" class="btn btn-primary">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        window.khaus = {
+            token : "xVr8aARQ1xzArRGgx31gG5ug07EjieSEqtndzNYC",
+            form : "",
+            errors : [],
+            warning : "",
+            danger : "",
+            success : "",
+            info : "",
+        }
+        window.baseURL = "http://localhost/santamota/public/";
+        window.segment = [""];
+        </script>
+
+        <script src="../bower_components/jquery/dist/jquery.min.js"></script>
+        <script src="..//bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+        <script src="../bower_components/jquery-form/jquery.form.js"></script>
+        <script src="../bower_components/jquery-deparam/jquery-deparam.min.js"></script>
+        <script src="../dist/js/khaus.js"></script>
+    </body>
+</html>

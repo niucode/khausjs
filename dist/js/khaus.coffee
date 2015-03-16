@@ -53,7 +53,6 @@ do ($=jQuery) ->
     # En caso de que no se envie el parametro errors, buscara esos datos
     # dentro de la variable global khaus
     $.khausDisplayFormErrors = (type, form, errors)->
-        console.debug form
         err = errors or window.khaus.errors
         counter = 0
         $.each err, (key, value)->
@@ -277,15 +276,21 @@ do ($=jQuery) ->
             form.on 'submit', (ev)->
                 form.ajaxForm
                     delegation: true
-                    success: (response, status, xhr, $form)->
+                    error: (response, status, xhr, $form)->
                         if o.reload
                             window.location.reload()
-                    error: (response, status, xhr, $form)->
+                    success: (response, status, xhr, $form)->
                         $.khausCleanFormErrors($form)
                         if typeof response.responseJSON isnt 'undefined'
                             errors = response.responseJSON
                         else
                             errors = $.parseJSON(response.responseText)
+                        $.each errors, (key, value)->
+                            if key.match /^khaus/
+                                key = key.replace('khaus', '').toLowerCase()
+                                if typeof window.khaus[key] isnt 'undefined'
+                                    window.khaus[key] = value
+                        $.khausLaunchAlerts()
                         $.khausDisplayFormErrors(o.errors, $form, errors)
 
     $.fn.khausNumberFormat = ()->

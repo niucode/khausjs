@@ -59,7 +59,6 @@
   };
   $.khausDisplayFormErrors = function(type, form, errors) {
     var counter, err;
-    console.debug(form);
     err = errors || window.khaus.errors;
     counter = 0;
     return $.each(err, function(key, value) {
@@ -384,12 +383,12 @@
       return form.on('submit', function(ev) {
         return form.ajaxForm({
           delegation: true,
-          success: function(response, status, xhr, $form) {
+          error: function(response, status, xhr, $form) {
             if (o.reload) {
               return window.location.reload();
             }
           },
-          error: function(response, status, xhr, $form) {
+          success: function(response, status, xhr, $form) {
             var errors;
             $.khausCleanFormErrors($form);
             if (typeof response.responseJSON !== 'undefined') {
@@ -397,6 +396,15 @@
             } else {
               errors = $.parseJSON(response.responseText);
             }
+            $.each(errors, function(key, value) {
+              if (key.match(/^khaus/)) {
+                key = key.replace('khaus', '').toLowerCase();
+                if (typeof window.khaus[key] !== 'undefined') {
+                  return window.khaus[key] = value;
+                }
+              }
+            });
+            $.khausLaunchAlerts();
             return $.khausDisplayFormErrors(o.errors, $form, errors);
           }
         });
