@@ -111,6 +111,15 @@
           });
       }
     });
+    if (window.khaus.redirect !== "") {
+      if ($.isArray(window.khaus.redirect)) {
+        setTimeout(function() {
+          return window.location = window.khaus.redirect[0];
+        }, window.khaus.redirect[1]);
+      } else {
+        window.location = window.khaus.redirect;
+      }
+    }
     $.khausLaunchAlerts();
     if (counter === 0) {
       if (o.resetForm) {
@@ -190,9 +199,15 @@
     }, settings);
     return $.each(o.title, function(key, value) {
       if (!!window.khaus[key]) {
-        $.khausNotify(value, window.khaus[key], {
-          template: key
-        });
+        if ($.isArray(window.khaus[key])) {
+          $.khausNotify(window.khaus[key][0], window.khaus[key][1], {
+            template: key
+          });
+        } else {
+          $.khausNotify(value, window.khaus[key], {
+            template: key
+          });
+        }
         return window.khaus[key] = '';
       }
     });

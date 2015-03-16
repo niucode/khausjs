@@ -94,6 +94,13 @@ do ($=jQuery) ->
                         title     : value
                         container : "body"
                     )
+        if window.khaus.redirect isnt ""
+            if $.isArray(window.khaus.redirect)
+                setTimeout(->
+                    window.location = window.khaus.redirect[0]
+                , window.khaus.redirect[1])
+            else
+                window.location = window.khaus.redirect
         $.khausLaunchAlerts()
         if counter is 0
             if o.resetForm
@@ -163,9 +170,14 @@ do ($=jQuery) ->
 
         $.each o.title, (key, value)->
             if !!window.khaus[key]
-                $.khausNotify(value, window.khaus[key], {
-                    template : key
-                })
+                if $.isArray(window.khaus[key])
+                    $.khausNotify(window.khaus[key][0], window.khaus[key][1], {
+                        template : key
+                    })
+                else
+                    $.khausNotify(value, window.khaus[key], {
+                        template : key
+                    })
                 window.khaus[key] = ''
 
     $.khausAjaxWait = (settings)->

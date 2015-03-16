@@ -28,6 +28,7 @@ window.khaus = {
     danger : "{!! Session::get('khausDanger') !!}",
     success : "{!! Session::get('khausSuccess') !!}",
     info : "{!! Session::get('khausInfo') !!}",
+    redirect : "{!! Session::get('khausRedirect') !!}",
 }
 window.baseURL = "{!! URL::to('/') !!}/";
 window.segment = ["{!! implode('", "', Request::segments()) !!}"];
