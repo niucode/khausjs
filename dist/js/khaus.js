@@ -383,12 +383,12 @@
       return form.on('submit', function(ev) {
         return form.ajaxForm({
           delegation: true,
-          error: function(response, status, xhr, $form) {
+          success: function(response, status, xhr, $form) {
             if (o.reload) {
               return window.location.reload();
             }
           },
-          success: function(response, status, xhr, $form) {
+          error: function(response, status, xhr, $form) {
             var errors;
             $.khausCleanFormErrors($form);
             if (typeof response.responseJSON !== 'undefined') {

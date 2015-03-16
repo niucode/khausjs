@@ -276,10 +276,10 @@ do ($=jQuery) ->
             form.on 'submit', (ev)->
                 form.ajaxForm
                     delegation: true
-                    error: (response, status, xhr, $form)->
+                    success: (response, status, xhr, $form)->
                         if o.reload
                             window.location.reload()
-                    success: (response, status, xhr, $form)->
+                    error: (response, status, xhr, $form)->
                         $.khausCleanFormErrors($form)
                         if typeof response.responseJSON isnt 'undefined'
                             errors = response.responseJSON
