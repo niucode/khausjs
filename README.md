@@ -2,9 +2,10 @@ Khaus JS
 =======
 **Front End components compatible with laravel 5**
 
-Add this code into `` tag to your layout just before `</body>` tag
+Add this code into layout, just before `</body>` tag
 
 ```javascript
+<script>
 window.khaus = {
     token : "{!! csrf_token() !!}",
     form : "{!! old('_name') !!}",
@@ -16,3 +17,5 @@ window.khaus = {
 }
 window.baseURL = "{!! URL::to('/') !!}/";
 window.segment = ["{!! implode('", "', Request::segments()) !!}"];
+</script>
+```
