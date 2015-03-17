@@ -27,7 +27,7 @@ $ bower install khausjs --save
 ```html
 <link media="all" type="text/css" rel="stylesheet" href="../dist/css/khaus.css">
 ```
-```
+```html
 <script src="../dist/js/khaus.js"></script>
 ```
 - Inserta este código dentro de una etiqueta `<script>` justo antes de la etiqueta `</body>` en el layout de tu proyecto
