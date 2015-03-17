@@ -392,7 +392,7 @@
     }).appendTo(modal_footer);
     return modal_D1.modal("show");
   };
-  $.fn.khausForm = function(settings) {
+  $.fn.khausForm = function() {
     return $.each(this, function() {
       var form;
       form = $(this);

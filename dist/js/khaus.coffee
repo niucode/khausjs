@@ -285,7 +285,7 @@ do ($=jQuery) ->
 
     # ===== CAMBIA EL FUNCIONAMIENTO DE LOS FORMULARIOS POR PETICIONES AJAX =====
     # 
-    $.fn.khausForm = (settings)->
+    $.fn.khausForm = ()->
         $.each @, ()->
             form = $(@)
             form.on 'submit', (ev)->

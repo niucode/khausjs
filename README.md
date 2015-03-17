@@ -1,25 +1,38 @@
-Khaus JS
+**Khaus JS**
 =======
-**Componentes de Khaus compatibles con Laravel 5**
+Componentes de Khaus compatibles con Laravel 5
 
-#### Dependencias
+
+----------
+
+
+#### **Dependencias**
 * jquery
 * lesshat
 * jquery-form
 * jquery-deparam
 
 
-#### Instalación
+----------
 
-* Bower
+
+#### **Guía de Instalación**
+
+- Bower
 ```bash
 $ bower install khausjs --save
 ```
+- Agrega la llamada a los archivos .css y .js dentro de tu archivo layout
 
-Inserta este código justo antes de la etiqueta `</body>` en el layout de tu proyecto
+```html
+<link media="all" type="text/css" rel="stylesheet" href="../dist/css/khaus.css">
+```
+```
+<script src="../dist/js/khaus.js"></script>
+```
+- Inserta este código dentro de una etiqueta `<script>` justo antes de la etiqueta `</body>` en el layout de tu proyecto
 
 ```javascript
-<script>
 window.khaus = {
     token : "{!! csrf_token() !!}",
     form : "{!! old('_name') !!}",
@@ -32,5 +45,19 @@ window.khaus = {
 }
 window.baseURL = "{!! URL::to('/') !!}/";
 window.segment = ["{!! implode('", "', Request::segments()) !!}"];
-</script>
 ```
+
+
+----------
+
+
+#### **Manual de uso**
+##### Características automáticas
+Al momento de enviar un formulario que contenga el atributo `name`, automáticamente se agrega el parámetro `_name` como input hidden.
+
+##### Metodos
+
+| Método | Parámetros | Descripción | Ejemplo |
+|--------|------------|:------------|---------|
+| khausNumberFormat | null | Agrega formato numérico a cualquier elemento dentro del DOM | \$('input').khausNumberFormat() |
+| khausForm | null | Convierte los formularios en llamadas Ajax con control de errores | \$('form').khausForm() |
