@@ -59,5 +59,5 @@ Al momento de enviar un formulario que contenga el atributo `name`, automáticam
 
 | Método | Parámetros | Descripción | Ejemplo |
 |--------|------------|:------------|---------|
-| khausNumberFormat | null | Agrega formato numérico a cualquier elemento dentro del DOM | \$('input').khausNumberFormat() |
-| khausForm | null | Convierte los formularios en llamadas Ajax con control de errores | \$('form').khausForm() |
+| khausNumberFormat | null | Agrega formato numérico a cualquier elemento dentro del DOM | $('input').khausNumberFormat() |
+| khausForm | null | Convierte los formularios en llamadas Ajax con control de errores | $('form').khausForm() |
