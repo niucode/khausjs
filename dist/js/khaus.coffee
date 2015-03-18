@@ -212,16 +212,14 @@ do ($=jQuery) ->
     # }
     # Al presionar el boton aceptar del modal se realizara el submit del formulario
     # de lo contrario no se realizara ninguna accion
-    $.fn.khausConfirmBeforeSubmit = (settings)->
-        o = $.extend
-            title   : ""
-            message : ""
-        , settings
-        $.each @, ()->
+    $.fn.khausConfirmBeforeSubmit = ->
+        $.each @, ->
+            title = $(@).data 'khaus-title' || ''
+            message = $(@).data 'khaus-confirm' || ''
             $(@).on 'submit', (ev)->
                 ev.preventDefault()
                 e = $(@)
-                $.khausConfirm o.title, o.message, ->
+                $.khausConfirm title, message, ->
                     e.off 'submit'
                     e.submit()
 
@@ -285,7 +283,7 @@ do ($=jQuery) ->
 
     # ===== CAMBIA EL FUNCIONAMIENTO DE LOS FORMULARIOS POR PETICIONES AJAX =====
     # 
-    $.fn.khausForm = ()->
+    $.fn.khausForm = (settings)->
         $.each @, ()->
             form = $(@)
             form.on 'submit', (ev)->
@@ -352,8 +350,34 @@ do ($=jQuery) ->
                         $('<option>', value:@id).text(@nombre).appendTo select
                     select.removeAttr 'disabled'
 
+    $.fn.khausClone = ->
+        @each ->
+            $(@).on 'click', (ev)->
+                ev.preventDefault()
+                selector = $(@).data 'clone'
+                target = $(selector).last()
+                clon = target.clone()
+                clon.find(':input[name]').each ->
+                    name = $(@).attr('name')
+                    key = name.match(/\[(\d+)\]/)
+                    if !!key
+                        key = parseInt key[1]
+                        newName = name.replace "[#{key}]", "[#{key+1}]"
+                        $(@).attr 'name', newName
+                clon.find('input').val ''
+                clon.find('select option:first').attr 'selected', true
+                clon.find(':button[data-removeparent]').on 'click', (ev) ->
+                    ev.preventDefault()
+                    selector = $(@).data 'removeparent'
+                    target = $(this).parents(selector)
+                    target.remove()
+                clon.insertAfter target
+
+
 $(document).ready ->
     $('form').khausAttachName()
     $.khausLaunchFormErrors()
     $.khausLaunchAlerts()
     $('form.khaus-form').khausForm()
+    $('[data-khaus-confirm]').khausConfirmBeforeSubmit()
+    $(':button[data-clone]').khausClone()

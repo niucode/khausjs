@@ -242,18 +242,16 @@
       });
     });
   };
-  $.fn.khausConfirmBeforeSubmit = function(settings) {
-    var o;
-    o = $.extend({
-      title: "",
-      message: ""
-    }, settings);
+  $.fn.khausConfirmBeforeSubmit = function() {
     return $.each(this, function() {
+      var message, title;
+      title = $(this).data('khaus-title' || '');
+      message = $(this).data('khaus-confirm' || '');
       return $(this).on('submit', function(ev) {
         var e;
         ev.preventDefault();
         e = $(this);
-        return $.khausConfirm(o.title, o.message, function() {
+        return $.khausConfirm(title, message, function() {
           e.off('submit');
           return e.submit();
         });
@@ -392,7 +390,7 @@
     }).appendTo(modal_footer);
     return modal_D1.modal("show");
   };
-  $.fn.khausForm = function() {
+  $.fn.khausForm = function(settings) {
     return $.each(this, function() {
       var form;
       form = $(this);
@@ -464,7 +462,7 @@
       }
     });
   };
-  return $.fn.khausLoadSelect = function(settings) {
+  $.fn.khausLoadSelect = function(settings) {
     var o;
     o = $.extend({
       url: $(this).data('khaus-url'),
@@ -489,11 +487,43 @@
       });
     });
   };
+  return $.fn.khausClone = function() {
+    return this.each(function() {
+      return $(this).on('click', function(ev) {
+        var clon, selector, target;
+        ev.preventDefault();
+        selector = $(this).data('clone');
+        target = $(selector).last();
+        clon = target.clone();
+        clon.find(':input[name]').each(function() {
+          var key, name, newName;
+          name = $(this).attr('name');
+          key = name.match(/\[(\d+)\]/);
+          if (!!key) {
+            key = parseInt(key[1]);
+            newName = name.replace("[" + key + "]", "[" + (key + 1) + "]");
+            return $(this).attr('name', newName);
+          }
+        });
+        clon.find('input').val('');
+        clon.find('select option:first').attr('selected', true);
+        clon.find(':button[data-removeparent]').on('click', function(ev) {
+          ev.preventDefault();
+          selector = $(this).data('removeparent');
+          target = $(this).parents(selector);
+          return target.remove();
+        });
+        return clon.insertAfter(target);
+      });
+    });
+  };
 })(jQuery);
 
 $(document).ready(function() {
   $('form').khausAttachName();
   $.khausLaunchFormErrors();
   $.khausLaunchAlerts();
-  return $('form.khaus-form').khausForm();
+  $('form.khaus-form').khausForm();
+  $('[data-khaus-confirm]').khausConfirmBeforeSubmit();
+  return $(':button[data-clone]').khausClone();
 });

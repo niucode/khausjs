@@ -1,5 +1,14 @@
 @import '../../bower_components/lesshat/build/lesshat';
 @import 'variables';
+
+a, button, input, .btn {
+	outline: none !important;
+}
+td {
+	form {
+		display: inline-block;
+	}
+}
 .cubic-bezier (@time: 500ms, @p1, @p2, @p3, @p4) {
 	-webkit-transition: all @time cubic-bezier(@p1, @p2, @p3, @p4);
 	   -moz-transition: all @time cubic-bezier(@p1, @p2, @p3, @p4);
