@@ -487,12 +487,12 @@
       });
     });
   };
-  return $.fn.khausClone = function() {
+  $.fn.khausClone = function() {
     return this.each(function() {
       return $(this).on('click', function(ev) {
         var clon, selector, target;
         ev.preventDefault();
-        selector = $(this).data('clone');
+        selector = $(this).data('khaus-clone');
         target = $(selector).last();
         clon = target.clone();
         clon.find(':input[name]').each(function() {
@@ -507,13 +507,19 @@
         });
         clon.find('input').val('');
         clon.find('select option:first').attr('selected', true);
-        clon.find(':button[data-removeparent]').on('click', function(ev) {
-          ev.preventDefault();
-          selector = $(this).data('removeparent');
-          target = $(this).parents(selector);
-          return target.remove();
-        });
+        clon.find(':button[data-khaus-removeparent]').khausRemoveParent();
         return clon.insertAfter(target);
+      });
+    });
+  };
+  return $.fn.khausRemoveParent = function() {
+    return this.each(function() {
+      return $(this).on('click', function(ev) {
+        var selector, target;
+        ev.preventDefault();
+        selector = $(this).data('khaus-removeparent');
+        target = $(this).parents(selector);
+        return target.remove();
       });
     });
   };
@@ -525,5 +531,6 @@ $(document).ready(function() {
   $.khausLaunchAlerts();
   $('form.khaus-form').khausForm();
   $('[data-khaus-confirm]').khausConfirmBeforeSubmit();
-  return $(':button[data-clone]').khausClone();
+  $(':button[data-khaus-clone]').khausClone();
+  return $(':button[data-khaus-removeparent]').khausRemoveParent();
 });

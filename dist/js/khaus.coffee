@@ -354,7 +354,7 @@ do ($=jQuery) ->
         @each ->
             $(@).on 'click', (ev)->
                 ev.preventDefault()
-                selector = $(@).data 'clone'
+                selector = $(@).data 'khaus-clone'
                 target = $(selector).last()
                 clon = target.clone()
                 clon.find(':input[name]').each ->
@@ -366,13 +366,16 @@ do ($=jQuery) ->
                         $(@).attr 'name', newName
                 clon.find('input').val ''
                 clon.find('select option:first').attr 'selected', true
-                clon.find(':button[data-removeparent]').on 'click', (ev) ->
-                    ev.preventDefault()
-                    selector = $(@).data 'removeparent'
-                    target = $(this).parents(selector)
-                    target.remove()
+                clon.find(':button[data-khaus-removeparent]').khausRemoveParent()
                 clon.insertAfter target
 
+    $.fn.khausRemoveParent = ->
+        @each ->
+            $(@).on 'click', (ev)->
+                ev.preventDefault()
+                selector = $(@).data 'khaus-removeparent'
+                target = $(this).parents(selector)
+                target.remove()
 
 $(document).ready ->
     $('form').khausAttachName()
@@ -380,4 +383,5 @@ $(document).ready ->
     $.khausLaunchAlerts()
     $('form.khaus-form').khausForm()
     $('[data-khaus-confirm]').khausConfirmBeforeSubmit()
-    $(':button[data-clone]').khausClone()
+    $(':button[data-khaus-clone]').khausClone()
+    $(':button[data-khaus-removeparent]').khausRemoveParent()
