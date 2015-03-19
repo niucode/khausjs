@@ -377,6 +377,13 @@ do ($=jQuery) ->
                 target = $(this).parents(selector)
                 target.remove()
 
+    $.fn.khausAlert = ->
+        @each ->
+            $(@).on 'click', (ev)->
+                message = $(@).data 'khaus-alert'
+                title = $(@).data 'khaus-title' || ''
+                $.khausAlert(title, message)
+
 $(document).ready ->
     $('form').khausAttachName()
     $.khausLaunchFormErrors()
@@ -385,3 +392,4 @@ $(document).ready ->
     $('form[data-khaus-confirm]').khausConfirmBeforeSubmit()
     $(':button[data-khaus-clone]').khausClone()
     $(':button[data-khaus-removeparent]').khausRemoveParent()
+    $(':button[data-khaus-alert]').khausAlert()

@@ -512,7 +512,7 @@
       });
     });
   };
-  return $.fn.khausRemoveParent = function() {
+  $.fn.khausRemoveParent = function() {
     return this.each(function() {
       return $(this).on('click', function(ev) {
         var selector, target;
@@ -520,6 +520,16 @@
         selector = $(this).data('khaus-removeparent');
         target = $(this).parents(selector);
         return target.remove();
+      });
+    });
+  };
+  return $.fn.khausAlert = function() {
+    return this.each(function() {
+      return $(this).on('click', function(ev) {
+        var message, title;
+        message = $(this).data('khaus-alert');
+        title = $(this).data('khaus-title' || '');
+        return $.khausAlert(title, message);
       });
     });
   };
@@ -532,5 +542,6 @@ $(document).ready(function() {
   $('form.khaus-form').khausForm();
   $('form[data-khaus-confirm]').khausConfirmBeforeSubmit();
   $(':button[data-khaus-clone]').khausClone();
-  return $(':button[data-khaus-removeparent]').khausRemoveParent();
+  $(':button[data-khaus-removeparent]').khausRemoveParent();
+  return $(':button[data-khaus-alert]').khausAlert();
 });
