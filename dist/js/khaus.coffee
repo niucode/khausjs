@@ -1,6 +1,11 @@
 do ($=jQuery) ->
-    # ===== MULTIUPLOADER DE IMAGENES =====
+
+
+    ### MULTIUPLOADER DE IMAGENES
+    # ==========================================================================
     # Transforma un input file en un uploader multiple de imagenes con preview
+    # ==========================================================================
+    ###
     $.fn.khausImageUploader = ()->
         $.each @, (key, div)->
             images = $(div).find('img.khaus-uploaded-thumb')
@@ -37,21 +42,28 @@ do ($=jQuery) ->
                         reader.readAsDataURL(value);
                     $(@).val ''
 
-    # ===== LIMPIA LOS ERRORES DEL FORMULARIO BOOTSTRAP =====
+    ### LIMPIA LOS ERRORES DEL FORMULARIO BOOTSTRAP
+    # ==========================================================================
     # @param DOMElement form - formulario
+    # ==========================================================================
+    ###
     $.khausCleanFormErrors = (form) ->
         $(form).find(".form-group").removeClass "has-error has-feedback"
         $(form).find("span.form-control-feedback").remove()
         $(form).find("span.help-block").remove()
         $(form).find(":input").tooltip "destroy"
 
-    # ===== DESPLIEGA LOS ERRORES DE FORMULARIO =====
+
+    ### DESPLIEGA LOS ERRORES DE FORMULARIO
+    # ==========================================================================
     # @param string type (block|tooltip) forma de mostrar errores
     # @param DOMElement form - formulario que realizo el envio
     # @param object errors - errores {'inputName':'Error Message'}
     #
     # En caso de que no se envie el parametro errors, buscara esos datos
     # dentro de la variable global khaus
+    # ==========================================================================
+    ###
     $.khausDisplayFormErrors = (settings)->
         o = $.extend
             errorsType : 'block'
@@ -100,8 +112,8 @@ do ($=jQuery) ->
                 $(o.form)[0].reset()
 
 
-
-    # ===== DESPLEGA UNA ALARTA O NOTIFICACION FLOTANTE =====
+    ### DESPLEGA UNA ALARTA O NOTIFICACION FLOTANTE
+    # ==========================================================================
     # @param string title - titulo de la notificacion
     # @param string message - mensaje de la notificacion
     # @param object settings {
@@ -109,6 +121,8 @@ do ($=jQuery) ->
     #   template : (string) apariencia bootstrap default|primary|success|info|danger|warning
     #   icon : (string) icono de la alerta req. Font Awesome ex: fa-plus
     # }
+    # ==========================================================================
+    ###
     $.khausNotify = (title, message, settings) ->
         o = $.extend
             delay : 10000
@@ -140,7 +154,12 @@ do ($=jQuery) ->
             , o.delay
         , 1
 
-    # ===== MUESTRA LOS ERRORES ALMACENADOS EN LAS VARIABLES KHAUS ======
+
+    ### MUESTRA LOS ERRORES ALMACENADOS EN LAS VARIABLES KHAUS
+    # ==========================================================================
+    # 
+    # ==========================================================================
+    ###
     $.khausLaunchFormErrors = ()->
         if !!window.khaus.errors and !!window.khaus.form
             form = $("form[name=#{window.khaus.form}]")
@@ -149,7 +168,11 @@ do ($=jQuery) ->
                 form: form
             )
 
-    # ===== =====
+    ###
+    # ==========================================================================
+    # 
+    # ==========================================================================
+    ###
     $.khausLaunchAlerts = (settings) ->
         o = $.extend
             title : 
@@ -177,6 +200,11 @@ do ($=jQuery) ->
                     })
                 window.khaus[key] = ''
 
+    ###
+    # ==========================================================================
+    # 
+    # ==========================================================================
+    ###
     $.khausAjaxWait = (settings)->
         o = $.extend
             type : 'cursor'
@@ -191,10 +219,16 @@ do ($=jQuery) ->
                     success : ()->
                         $('body').removeClass 'khaus-ajax-wait'
 
-    # ===== ADJUNTA AL FORMULARIO EL PARAMETRO NAME =====
+
+
+
+    ### ADJUNTA AL FORMULARIO EL PARAMETRO NAME
+    # ==========================================================================
     # Si el formulario tiene el atributo [name] activado 
     # antes de realizar el envio de los parametros
     # agrega un input hidden name="_name" value="<nombre del formulario>"
+    # ==========================================================================
+    ###
     $.fn.khausAttachName = ()->
         $.each @, ()->
             $(@).on 'submit', (ev)->
@@ -205,13 +239,17 @@ do ($=jQuery) ->
                         'value':$(@).attr('name')
                     ).prependTo($(@))
 
-    # ===== CAPTURA EL EVENTO SUBMIT Y ENVIA UN MODAL KHAUS CONFIRM =====
+
+    ### CAPTURA EL EVENTO SUBMIT Y ENVIA UN MODAL KHAUS CONFIRM
+    # ==========================================================================
     # @param object settings {
     #   title : (string) - titulo de la ventana modal
     #   message : (string) - mensaje de la ventana modal
     # }
     # Al presionar el boton aceptar del modal se realizara el submit del formulario
     # de lo contrario no se realizara ninguna accion
+    # ==========================================================================
+    ###
     $.fn.khausConfirmBeforeSubmit = ->
         $.each @, ->
             title = $(@).data 'khaus-title' || ''
@@ -224,6 +262,15 @@ do ($=jQuery) ->
                     e.submit()
 
 
+    ### 
+    # ==========================================================================
+    # Envia un modal de alerta con las opciones aceptar y cancelar
+    # Metodos de llamada:
+    # - por codigo: $.khausAlert('Titulo', 'Mensaje');
+    # - por dom: <button data-khaus-alert="Mensaje" data-khaus-title="Opcional">
+    # El titulo es opcional en la llamada por dom
+    # ==========================================================================
+    ### 
     $.khausAlert = (title, message) ->
         if $(".khaus-modal-alert").size() > 0
             $(".khaus-modal-alert").remove()
@@ -237,6 +284,18 @@ do ($=jQuery) ->
         $("<button>", "type":"button", "class":"btn btn-primary", "data-dismiss":"modal").html("Aceptar").appendTo modal_footer
         modal_D1.modal "show"
 
+    $.fn.khausAlert = ->
+        @each ->
+            $(@).on 'click', (ev)->
+                message = $(@).data 'khaus-alert'
+                title = $(@).data 'khaus-title' || ''
+                $.khausAlert(title, message)
+
+    ###
+    # ==========================================================================
+    # 
+    # ==========================================================================
+    ###
     $.khausPrompt = (title, message, defaultValue = "", callback = ->) ->
         if $(".khaus-modal-prompt").size() > 0
             $(".khaus-modal-prompt").remove()
@@ -261,7 +320,11 @@ do ($=jQuery) ->
             input_prompt.select()
         , 200
 
-
+    ###
+    # ==========================================================================
+    # 
+    # ==========================================================================
+    ###
     $.khausConfirm = (title, message, callback = ->) ->
         if $(".khaus-modal-confirm").size() > 0
             $(".khaus-modal-confirm").remove()
@@ -281,8 +344,12 @@ do ($=jQuery) ->
             .appendTo modal_footer
         modal_D1.modal "show"
 
-    # ===== CAMBIA EL FUNCIONAMIENTO DE LOS FORMULARIOS POR PETICIONES AJAX =====
+
+    ### CAMBIA EL FUNCIONAMIENTO DE LOS FORMULARIOS POR PETICIONES AJAX
+    # ==========================================================================
     # 
+    # ==========================================================================
+    ###
     $.fn.khausForm = (settings)->
         $.each @, ()->
             form = $(@)
@@ -323,6 +390,13 @@ do ($=jQuery) ->
                             resetForm: form.data('khaus-reset') || false
                         )
 
+
+
+    ###
+    # ==========================================================================
+    # 
+    # ==========================================================================
+    ###
     $.fn.khausNumberFormat = ()->
         replace = (number)->
             number = number.replace /[^0-9]+/g, ''
@@ -335,6 +409,12 @@ do ($=jQuery) ->
                 number = replace $(this).html()
                 $(this).html(number)
 
+
+    ###
+    # ==========================================================================
+    # 
+    # ==========================================================================
+    ###
     $.fn.khausLoadSelect = (settings)->
         o = $.extend
             url : $(@).data 'khaus-url'
@@ -350,6 +430,11 @@ do ($=jQuery) ->
                         $('<option>', value:@id).text(@nombre).appendTo select
                     select.removeAttr 'disabled'
 
+    ###
+    # ==========================================================================
+    # 
+    # ==========================================================================
+    ###
     $.fn.khausClone = ->
         @each ->
             $(@).on 'click', (ev)->
@@ -369,6 +454,12 @@ do ($=jQuery) ->
                 clon.find(':button[data-khaus-removeparent]').khausRemoveParent()
                 clon.insertAfter target
 
+
+    ###
+    # ==========================================================================
+    # 
+    # ==========================================================================
+    ###
     $.fn.khausRemoveParent = ->
         @each ->
             $(@).on 'click', (ev)->
@@ -377,12 +468,7 @@ do ($=jQuery) ->
                 target = $(this).parents(selector)
                 target.remove()
 
-    $.fn.khausAlert = ->
-        @each ->
-            $(@).on 'click', (ev)->
-                message = $(@).data 'khaus-alert'
-                title = $(@).data 'khaus-title' || ''
-                $.khausAlert(title, message)
+    
 
 $(document).ready ->
     $('form').khausAttachName()
