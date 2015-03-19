@@ -530,7 +530,7 @@ $(document).ready(function() {
   $.khausLaunchFormErrors();
   $.khausLaunchAlerts();
   $('form.khaus-form').khausForm();
-  $('[data-khaus-confirm]').khausConfirmBeforeSubmit();
+  $('form[data-khaus-confirm]').khausConfirmBeforeSubmit();
   $(':button[data-khaus-clone]').khausClone();
   return $(':button[data-khaus-removeparent]').khausRemoveParent();
 });

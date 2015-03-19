@@ -382,6 +382,6 @@ $(document).ready ->
     $.khausLaunchFormErrors()
     $.khausLaunchAlerts()
     $('form.khaus-form').khausForm()
-    $('[data-khaus-confirm]').khausConfirmBeforeSubmit()
+    $('form[data-khaus-confirm]').khausConfirmBeforeSubmit()
     $(':button[data-khaus-clone]').khausClone()
     $(':button[data-khaus-removeparent]').khausRemoveParent()
