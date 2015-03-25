@@ -1,6 +1,6 @@
 {
   "name": "khausjs",
-  "version": "0.1",
+  "version": "1.0.1",
   "homepage": "https://github.com/Niucode/khausjs",
   "authors": [
     "rhyudek1 <rhyudek1@gmail.com>"
@@ -15,11 +15,7 @@
   "dependencies": {
     "jquery-deparam": "~0.2.0",
     "jquery-form": "~3.46.0",
-    "lesshat": "~3.0.2",
-    "jquery": "~2.1.3",
-    "lesshat": "~3.0.2"
+    "jquery": "~2.1.3"
   },
-  "devDependencies": {
-    "bootstrap": "~3.3.4"
-  }
+  "devDependencies": {}
 }

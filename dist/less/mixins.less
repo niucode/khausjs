@@ -1,0 +1,27 @@
+.box-shadow(...) {
+  @process: ~`(function(e){e=e||"0";var t=/\d/gi,r=/(?:\s|^)(\.?\d+\.?\d*)(?![^(]*\)|\w|%|\.)/gi;return/^[^, ]*,/.test(e)&&(e=e.replace(/(?:,)(?![^(]*\))/g,"")),t.test(e)&&(e=e.replace(r,function(e){return 0==e&&e||e+"px"})),e})((function(){var e="@{arguments}";return e=e.replace(/^\[|\]$/g,"")})())`;
+  -webkit-box-shadow: @process;
+  -moz-box-shadow: @process;
+  box-shadow: @process;
+}
+.border-radius(...) {
+  @process: ~`(function(e){e=e||"0";var t=/\d/gi,r=/(?:\s|^)(\.?\d+\.?\d*)(?![^(]*\)|\w|%|\.)/gi;return/^[^, ]*,/.test(e)&&(e=e.replace(/(?:,)(?![^(]*\))/g,"")),t.test(e)&&(e=e.replace(r,function(e){return 0==e&&e||e+"px"})),e})((function(){var e="@{arguments}";return e=e.replace(/^\[|\]$/g,"")})())`;
+  -webkit-border-radius: @process; -webkit-background-clip: padding-box; 
+  -moz-border-radius: @process; -moz-background-clip: padding; 
+  border-radius: @process; background-clip: padding-box; 
+}
+.translate(...) {
+  @process: ~`(function(e){e=e||"0";var r=/\d/gi,t=/(?:\s|^)(\.?\d+\.?\d*)(?![^(]*\)|\w|%|\.)/gi;return r.test(e)&&(e=e.replace(t,function(e){return 0==e&&e||e+"px"})),e})((function(){var e="@{arguments}";return e=e.replace(/^\[|\]$/g,"")})())`;
+  -webkit-transform: translate(@process);
+  -moz-transform: translate(@process);
+  -ms-transform: translate(@process);
+  -o-transform: translate(@process);
+  transform: translate(@process);
+}
+.cubic-bezier (@time: 500ms, @p1, @p2, @p3, @p4) {
+  -webkit-transition: all @time cubic-bezier(@p1, @p2, @p3, @p4);
+     -moz-transition: all @time cubic-bezier(@p1, @p2, @p3, @p4);
+      -ms-transition: all @time cubic-bezier(@p1, @p2, @p3, @p4);
+       -o-transition: all @time cubic-bezier(@p1, @p2, @p3, @p4);
+          transition: all @time cubic-bezier(@p1, @p2, @p3, @p4);
+}

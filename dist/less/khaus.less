@@ -1,5 +1,5 @@
-@import '../../bower_components/lesshat/build/lesshat';
-@import 'variables';
+@import 'variables.less';
+@import 'mixins.less';
 
 a, button, input, .btn {
 	outline: none !important;
@@ -8,13 +8,6 @@ td {
 	form {
 		display: inline-block;
 	}
-}
-.cubic-bezier (@time: 500ms, @p1, @p2, @p3, @p4) {
-	-webkit-transition: all @time cubic-bezier(@p1, @p2, @p3, @p4);
-	   -moz-transition: all @time cubic-bezier(@p1, @p2, @p3, @p4);
-	    -ms-transition: all @time cubic-bezier(@p1, @p2, @p3, @p4);
-	     -o-transition: all @time cubic-bezier(@p1, @p2, @p3, @p4);
-	        transition: all @time cubic-bezier(@p1, @p2, @p3, @p4);
 }
 .khaus-notify-container {
 	position: fixed;
