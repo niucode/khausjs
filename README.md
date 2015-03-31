@@ -37,14 +37,14 @@ window.khaus = {
     token : "{!! csrf_token() !!}",
     form : "{!! old('_name') !!}",
     errors : {!! $errors->toJson() !!},
-    warning : "{!! Session::get('khausWarning') !!}",
-    danger : "{!! Session::get('khausDanger') !!}",
-    success : "{!! Session::get('khausSuccess') !!}",
-    info : "{!! Session::get('khausInfo') !!}",
-    redirect : "{!! Session::get('khausRedirect') !!}",
+    warning : {!! json_encode(Session::get('khausWarning')) !!},
+    danger : {!! json_encode(Session::get('khausDanger')) !!},
+    success : {!! json_encode(Session::get('khausSuccess')) !!},
+    info : {!! json_encode(Session::get('khausInfo')) !!},
+    redirect : {!! json_encode(Session::get('khausRedirect')) !!},
 }
 window.baseURL = "{!! URL::to('/') !!}/";
-window.segment = ["{!! implode('", "', Request::segments()) !!}"];
+window.segment = {!! json_encode(Request::segments()) !!};
 ```
 
 
