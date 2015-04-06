@@ -667,5 +667,6 @@ $(document).ready(function() {
   $('form[data-khaus-confirm]').khausConfirmBeforeSubmit();
   $(':button[data-khaus-clone]').khausClone();
   $(':button[data-khaus-removeparent]').khausRemoveParent();
-  return $(':button[data-khaus-alert]').khausAlert();
+  $(':button[data-khaus-alert]').khausAlert();
+  return $('.khaus-numero').khausNumberFormat();
 });

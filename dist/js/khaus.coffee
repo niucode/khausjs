@@ -479,3 +479,4 @@ $(document).ready ->
     $(':button[data-khaus-clone]').khausClone()
     $(':button[data-khaus-removeparent]').khausRemoveParent()
     $(':button[data-khaus-alert]').khausAlert()
+    $('.khaus-numero').khausNumberFormat()
