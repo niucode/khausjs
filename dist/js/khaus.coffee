@@ -420,12 +420,13 @@ do ($=jQuery) ->
             url : $(@).data 'khaus-url'
             select : $(@).data 'khaus-select'
         , settings
+        select = $(o.select)
+        select.attr 'disabled', true
         @each ->
             $(@).on 'change', ->
-                select = $(o.select)
                 select.attr 'disabled', true
                 select.text ''
-                $.get o.url, value:$(@).val(), (r)->
+                $.get "#{window.baseURL}/#{o.url}/#{@value}.json", (r)->
                     $.each r, ->
                         $('<option>', value:@id).text(@nombre).appendTo select
                     select.removeAttr 'disabled'
@@ -480,3 +481,4 @@ $(document).ready ->
     $(':button[data-khaus-removeparent]').khausRemoveParent()
     $(':button[data-khaus-alert]').khausAlert()
     $('.khaus-numero').khausNumberFormat()
+    $('select[data-khaus-select]').khausLoadSelect();

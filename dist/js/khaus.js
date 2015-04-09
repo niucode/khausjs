@@ -585,20 +585,18 @@
    * ==========================================================================
    */
   $.fn.khausLoadSelect = function(settings) {
-    var o;
+    var o, select;
     o = $.extend({
       url: $(this).data('khaus-url'),
       select: $(this).data('khaus-select')
     }, settings);
+    select = $(o.select);
+    select.attr('disabled', true);
     return this.each(function() {
       return $(this).on('change', function() {
-        var select;
-        select = $(o.select);
         select.attr('disabled', true);
         select.text('');
-        return $.get(o.url, {
-          value: $(this).val()
-        }, function(r) {
+        return $.get("" + window.baseURL + "/" + o.url + "/" + this.value + ".json", function(r) {
           $.each(r, function() {
             return $('<option>', {
               value: this.id
@@ -668,5 +666,6 @@ $(document).ready(function() {
   $(':button[data-khaus-clone]').khausClone();
   $(':button[data-khaus-removeparent]').khausRemoveParent();
   $(':button[data-khaus-alert]').khausAlert();
-  return $('.khaus-numero').khausNumberFormat();
+  $('.khaus-numero').khausNumberFormat();
+  return $('select[data-khaus-select]').khausLoadSelect();
 });
