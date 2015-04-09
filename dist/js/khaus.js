@@ -584,26 +584,35 @@
    * 
    * ==========================================================================
    */
+  $.khausLoadSelect = function($select, url, fk) {
+    $select.attr('disabled', true);
+    $select.text('');
+    return $.get("" + window.baseURL + url + "/" + fk + ".json", function(r) {
+      $.each(r, function() {
+        return $('<option>', {
+          value: this.id
+        }).text(this.nombre).appendTo($select);
+      });
+      return $select.removeAttr('disabled');
+    });
+  };
   $.fn.khausLoadSelect = function(settings) {
-    var o, select;
+    var o;
     o = $.extend({
       url: $(this).data('khaus-url'),
       select: $(this).data('khaus-select')
     }, settings);
-    select = $(o.select);
-    select.attr('disabled', true);
     return this.each(function() {
+      var $select;
+      $select = $(o.select);
+      if (this.value) {
+        $.khausLoadSelect($select, o.url, this.value);
+      } else {
+        $select.text('');
+        $select.attr('disabled', true);
+      }
       return $(this).on('change', function() {
-        select.attr('disabled', true);
-        select.text('');
-        return $.get("" + window.baseURL + "/" + o.url + "/" + this.value + ".json", function(r) {
-          $.each(r, function() {
-            return $('<option>', {
-              value: this.id
-            }).text(this.nombre).appendTo(select);
-          });
-          return select.removeAttr('disabled');
-        });
+        return $.khausLoadSelect($select, o.url, this.value);
       });
     });
   };
