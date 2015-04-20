@@ -415,28 +415,33 @@ do ($=jQuery) ->
     # 
     # ==========================================================================
     ###
-    $.khausLoadSelect = ($select, url, fk)->
+    $.khausLoadSelect = ($select, url, fk, selected)->
         $select.attr 'disabled', true
         $select.text ''
         $.get "#{window.baseURL}#{url}/#{fk}.json", (r)->
             $.each r, ->
                 $('<option>', value:@id).text(@nombre).appendTo $select
             $select.removeAttr 'disabled'
+            if $select.find("option[value=#{selected}]").size() > 0
+                $select.val selected
+            else
+                $select.val($select.find('option:first').attr('value'))
 
     $.fn.khausLoadSelect = (settings)->
         o = $.extend
             url : $(@).data 'khaus-url'
             select : $(@).data 'khaus-select'
+            selected : $(@).data 'khaus-selected' or 1
         , settings
         @each ->
             $select = $(o.select)
             if @value
-                $.khausLoadSelect $select, o.url, @value
+                $.khausLoadSelect $select, o.url, @value, o.selected
             else
                 $select.text ''
                 $select.attr 'disabled', true
             $(@).on 'change', ->
-                $.khausLoadSelect $select, o.url, @value
+                $.khausLoadSelect $select, o.url, @value, o.selected
 
     ###
     # ==========================================================================
