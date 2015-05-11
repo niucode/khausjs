@@ -17,8 +17,8 @@ var vendor = {
 
 /** App paths **/
 var paths = {
-	styles: ['src/less/app.less'],
-	scripts: ['src/coffee/app.coffee'],
+	styles: ['src/less/khausjs.less'],
+	scripts: ['src/coffee/khausjs.coffee'],
 	images: ''
 };
 
@@ -26,7 +26,7 @@ gulp.task('styles', function () {
 	return gulp.src(paths.styles)
 		.pipe(sourcemaps.init())
 			.pipe(less())
-			.pipe(concat('app.css'))
+			.pipe(concat('kahusjs.css'))
 			.pipe(gulp.dest('dist/css'))
 			.pipe(minifyCss({compatibility: 'ie8'}))
 			.pipe(rename({extname:'.min.css'}))
@@ -50,7 +50,7 @@ gulp.task('scripts', function() {
 	return gulp.src(paths.scripts)
 		.pipe(sourcemaps.init())
 			.pipe(coffee({bare: true}))
-			.pipe(concat('app.js'))
+			.pipe(concat('kahusjs.js'))
 			.pipe(gulp.dest('dist/js'))
 			.pipe(uglify())
 			.pipe(rename({extname:'.min.js'}))
