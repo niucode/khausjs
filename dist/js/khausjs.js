@@ -516,7 +516,7 @@
               }
             });
             $.khausLaunchAlerts();
-            if (window.khaus.redirect !== "") {
+            if (window.khaus.redirect !== null) {
               if (form.data('khaus-reset') || false) {
                 $($form)[0].reset();
               }

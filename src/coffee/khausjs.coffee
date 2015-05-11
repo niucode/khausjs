@@ -363,7 +363,7 @@ do ($=jQuery) ->
                                 if typeof window.khaus[key] isnt 'undefined'
                                     window.khaus[key] = value
                         $.khausLaunchAlerts()
-                        if window.khaus.redirect isnt ""
+                        if window.khaus.redirect isnt null
                             if form.data('khaus-reset') || false
                                 $($form)[0].reset()
                             if $.isArray(window.khaus.redirect)
