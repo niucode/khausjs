@@ -9,7 +9,7 @@
   "license": "MIT",
   "main": [
     "dist/css/app.css",
-    "dist/js/app.js",
+    "dist/js/app.js"
   ],
   "ignore": [
     "**/.*",
