@@ -1,5 +1,7 @@
+/** Gulp requires **/
 var gulp = require('gulp'),
 	path = require('path'),
+	rename = require('gulp-rename'),
 	less = require('gulp-less'),
 	coffee = require('gulp-coffee'),
 	concat = require('gulp-concat'),
@@ -7,40 +9,75 @@ var gulp = require('gulp'),
 	minifyCss = require('gulp-minify-css'),
 	sourcemaps = require('gulp-sourcemaps');
 
+/** Vendor paths **/
+var vendor = {
+	styles: [],
+	scripts: []
+}
 
-gulp.task('less', function () {  
-	return gulp.src('src/less/app.less')
+/** App paths **/
+var paths = {
+	styles: ['src/less/app.less'],
+	scripts: ['src/coffee/app.coffee'],
+	images: ''
+};
+
+gulp.task('styles', function () {  
+	return gulp.src(paths.styles)
 		.pipe(sourcemaps.init())
-		.pipe(less())
+			.pipe(less())
+			.pipe(concat('app.css'))
+			.pipe(gulp.dest('dist/css'))
+			.pipe(minifyCss({compatibility: 'ie8'}))
+			.pipe(rename({extname:'.min.css'}))
+			.pipe(gulp.dest('dist/css'))
+		.pipe(sourcemaps.write('.'))
+		.pipe(gulp.dest('dist/css'));
+});
+gulp.task('vendor-styles', function() {
+	return gulp.src(vendor.styles)
+		.pipe(sourcemaps.init())
+			.pipe(concat('vendor.css'))
+			.pipe(gulp.dest('dist/css'))
+			.pipe(minifyCss({compatibility: 'ie8'}))
+			.pipe(rename({extname:'.min.css'}))
+			.pipe(gulp.dest('dist/css'))
 		.pipe(sourcemaps.write('.'))
 		.pipe(gulp.dest('dist/css'));
 });
 
-gulp.task('coffee', function() {
-	gulp.src('src/coffee/app.coffee')
-		.pipe(coffee({bare: true}))
-		.pipe(gulp.dest('dist/js'))
+gulp.task('scripts', function() {
+	return gulp.src(paths.scripts)
+		.pipe(sourcemaps.init())
+			.pipe(coffee({bare: true}))
+			.pipe(concat('app.js'))
+			.pipe(gulp.dest('dist/js'))
+			.pipe(uglify())
+			.pipe(rename({extname:'.min.js'}))
+			.pipe(gulp.dest('dist/js'))
+		.pipe(sourcemaps.write('.'))
+    	.pipe(gulp.dest('dist/js'));
+});
+gulp.task('vendor-scripts', function() {
+	return gulp.src(vendor.scripts)
+		.pipe(sourcemaps.init())
+			.pipe(concat('app.js'))
+			.pipe(gulp.dest('dist/js'))
+			.pipe(uglify())
+			.pipe(rename({extname:'.min.js'}))
+			.pipe(gulp.dest('dist/js'))
+		.pipe(sourcemaps.write('.'))
+    	.pipe(gulp.dest('dist/js'));
 });
 
-
-gulp.task('compressJS', function() {  
-  return gulp.src('dist/js/app.js')
-  	.pipe(sourcemaps.init())
-    .pipe(uglify())
-    .pipe(sourcemaps.write('.'))
-    .pipe(gulp.dest('dist/js'));
+gulp.task('watch', function() {
+	gulp.watch(paths.styles, ['styles']);
+	gulp.watch(paths.scripts, ['scripts']);
 });
 
-gulp.task('compressCSS', function() {
-	return gulp.src('styles/*.css')
-		.pipe(minifyCss({compatibility: 'ie8'}))
-		.pipe(gulp.dest('dist'));
-});
-
-
-
-gulp.task('default', function() {
-    gulp.src('dist/js/*.js')
-        .pipe(uglify())
-        .pipe(gulp.dest('dist/js'));
-});
+gulp.task('default', [
+	'vendor-styles', 
+	'styles', 
+	'scripts',
+	'vendor-scripts'
+]);

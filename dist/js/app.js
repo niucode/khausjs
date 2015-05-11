@@ -1,2 +1,685 @@
-!function(t){return t.fn.khausImageUploader=function(){return t.each(this,function(e,a){var n,r,o;return n=t(a).find("img.khaus-uploaded-thumb"),n.on("click",function(){var e;return e=t(this).attr("src").split("/").pop(),t("<input>",{type:"hidden",name:"khaus_delete_thumb[]",value:e}).appendTo(a),t(this).remove()}),r=t(a).find(":input[type=file]"),o=r.attr("name"),r.removeAttr("name"),r.on("change",function(e){return t(this).val()?(t.each(e.target.files,function(e,n){var r;return n.type.match("image.*")&&(r=new FileReader,r.onload=function(e){return function(e){var n;return n=btoa(t.now()),n=n.replace(/[^a-z]+/gi,""),t("<input>",{"class":n,type:"hidden",name:o+"[]",value:e.target.result}).prependTo(a),t("<img>",{"class":"khaus-upload-thumb",src:e.target.result}).on("click",function(){return t("input."+n).remove(),t(this).remove()}).prependTo(a)}}(n)),r.readAsDataURL(n)}),t(this).val("")):void 0})})},t.khausCleanFormErrors=function(e){return t(e).find(".form-group").removeClass("has-error has-feedback"),t(e).find("span.form-control-feedback").remove(),t(e).find("span.help-block").remove(),t(e).find(":input").tooltip("destroy")},t.khausDisplayFormErrors=function(e){var a,n;return n=t.extend({errorsType:"block",form:null,errors:window.khaus.errors,resetForm:!1},e),a=0,t.each(n.errors,function(e,r){var o,s,i,u,d,l;if(e.match(/^khaus/)&&(e=e.replace("khaus","").toLowerCase(),"undefined"!=typeof window.khaus[e]))return window.khaus[e]=r,!0;switch(a++,i=t(n.form).find(":input[name="+e+"]"),1!==i.size()&&(i=t(n.form).find(":input[name^='"+e+"[']")),i.parents(".form-group").addClass("has-error"),s=i.parents(".tab-content"),s.size()>0&&(1===a&&t("ul.nav-tabs .badge").remove(),u=i.parents(".tab-pane"),d=u.attr("id"),l=t("ul.nav-tabs a[href=#"+d+"]"),o=l.find(".badge"),0===o.length&&(o=t("<span>",{"class":"badge"}).text(0),o.appendTo(l)),o.text(parseInt(o.text())+1)),n.errorsType){case"block":return t("<span>",{"class":"help-block"}).html(r).insertAfter(i);case"tooltip":return i.tooltip({placement:"top",title:r,container:"body"})}}),t.khausLaunchAlerts(),0===a&&n.resetForm?t(n.form)[0].reset():void 0},t.khausNotify=function(e,a,n){var r,o,s,i,u,d,l;return l=t.extend({delay:1e4,template:"default",icon:null},n),r=t(".khaus-notify-container"),0===r.size()&&(r=t("<div>",{"class":"khaus-notify-container"}).prependTo("body")),d=t("<div>",{"class":"khaus-notify khaus-notify-"+l.template}),null!==l.icon&&(o=t("<i>",{"class":"fa fa-fw "+l.icon}),s=t("<div>",{"class":"icon-container"}).html(o),d.append(s)),i=t("<div>",{"class":"text-container"}),u=t("<div>",{"class":"title"}).html(e).appendTo(i),a=t("<div>").html(a).appendTo(i),d.append(i),d.appendTo(r),d.on("click",function(){return t(this).removeClass("khaus-notify-show"),t(this).addClass("khaus-notify-hide"),t(this).one("webkitTransitionEnd otransitionend oTransitionEnd msTransitionEnd transitionend",function(){return t(this).remove()})}),setTimeout(function(){return d.addClass("khaus-notify-show"),setTimeout(function(){return d.trigger("click")},l.delay)},1)},t.khausLaunchFormErrors=function(){var e;return window.khaus.errors&&window.khaus.form?(e=t("form[name="+window.khaus.form+"]"),t.khausDisplayFormErrors({errorsType:"block",form:e})):void 0},t.khausLaunchAlerts=function(e){var a;return a=t.extend({title:{"default":"",primary:"",success:"El proceso ha finalizado",danger:"Ha ocurrido un error",warning:"Importante",info:"Informaci&oacute;n"}},e),t.each(a.title,function(e,a){return window.khaus[e]?(t.isArray(window.khaus[e])?t.khausNotify(window.khaus[e][0],window.khaus[e][1],{template:e}):t.isPlainObject(window.khaus[e])?t.each(window.khaus[e],function(a,n){return t.khausNotify(a,n,{template:e})}):t.khausNotify(a,window.khaus[e],{template:e}),window.khaus[e]=""):void 0})},t.khausAjaxWait=function(e){var a;switch(a=t.extend({type:"cursor"},e),a.type){case"cursor":return t.ajaxSetup({beforeSend:function(){return t("body").addClass("khaus-ajax-wait")},complete:function(){return t("body").removeClass("khaus-ajax-wait")},success:function(){return t("body").removeClass("khaus-ajax-wait")}})}},t.fn.khausAttachName=function(){return t.each(this,function(){return t(this).on("submit",function(e){return t(this).is("[name]")&&0===t(this).find("input[name=_name]").size()?t("<input>",{name:"_name",type:"hidden",value:t(this).attr("name")}).prependTo(t(this)):void 0})})},t.fn.khausConfirmBeforeSubmit=function(){return t.each(this,function(){var e,a;return a=t(this).data("khaus-title"),e=t(this).data("khaus-confirm"),t(this).on("submit",function(n){var r;return n.preventDefault(),r=t(this),t.khausConfirm(a,e,function(){return r.off("submit"),r.submit()})})})},t.khausAlert=function(e,a){var n,r,o,s,i,u;return t(".khaus-modal-alert").size()>0&&t(".khaus-modal-alert").remove(),n=t("<div>",{"class":"modal fade khaus-modal-alert"}),r=t("<div>",{"class":"modal-dialog"}).appendTo(n),o=t("<div>",{"class":"modal-content"}).appendTo(r),u=t("<div>",{"class":"modal-header"}).appendTo(o),t("<h4>",{"class":"modal-title"}).html(e).appendTo(u),s=t("<div>",{"class":"modal-body"}).html(a).appendTo(o),i=t("<div>",{"class":"modal-footer"}).appendTo(o),t("<button>",{type:"button","class":"btn btn-primary","data-dismiss":"modal"}).html("Aceptar").appendTo(i),n.modal("show")},t.fn.khausAlert=function(){return this.each(function(){return t(this).on("click",function(e){var a,n;return a=t(this).data("khaus-alert"),n=t(this).data("khaus-title"),t.khausAlert(n,a)})})},t.khausPrompt=function(e,a,n,r){var o,s,i,u,d,l,c;return null==n&&(n=""),null==r&&(r=function(){}),t(".khaus-modal-prompt").size()>0&&t(".khaus-modal-prompt").remove(),s=t("<div>",{"class":"modal fade khaus-modal-prompt"}),i=t("<div>",{"class":"modal-dialog"}).appendTo(s),u=t("<div>",{"class":"modal-content"}).appendTo(i),c=t("<div>",{"class":"modal-header"}).appendTo(u),t("<h4>",{"class":"modal-title"}).html(e).appendTo(c),d=t("<div>",{"class":"modal-body"}).appendTo(u),t("<h5>").css({"font-weight":"bold"}).html(a).appendTo(d),o=t("<input>",{type:"text","class":"form-control"}).val(n).appendTo(d),l=t("<div>",{"class":"modal-footer"}).appendTo(u),t("<button>",{type:"button","class":"btn btn-default","data-dismiss":"modal"}).html("Cancelar").appendTo(l),t("<button>",{type:"button","class":"btn btn-primary","data-dismiss":"modal"}).html("Aceptar").on("click",function(){r(o.val())}).appendTo(l),s.modal("show"),setTimeout(function(){return o.select()},200)},t.khausConfirm=function(e,a,n){var r,o,s,i,u,d;return null==n&&(n=function(){}),t(".khaus-modal-confirm").size()>0&&t(".khaus-modal-confirm").remove(),r=t("<div>",{"class":"modal fade khaus-modal-confirm"}),o=t("<div>",{"class":"modal-dialog"}).appendTo(r),s=t("<div>",{"class":"modal-content"}).appendTo(o),d=t("<div>",{"class":"modal-header"}).appendTo(s),t("<h4>",{"class":"modal-title"}).html(e).appendTo(d),i=t("<div>",{"class":"modal-body"}).html(a).appendTo(s),u=t("<div>",{"class":"modal-footer"}).appendTo(s),t("<button>",{type:"button","class":"btn btn-default","data-dismiss":"modal"}).html("Cancelar").appendTo(u),t("<button>",{type:"button","class":"btn btn-primary","data-dismiss":"modal"}).html("Aceptar").on("click",function(){n()}).appendTo(u),r.modal("show")},t.fn.khausForm=function(e){return t.each(this,function(){var e;return e=t(this),e.on("submit",function(a){return e.ajaxForm({delegation:!0,success:function(a,n,r,o){return t.each(a,function(t,e){return t.match(/^khaus/)&&(t=t.replace("khaus","").toLowerCase(),"undefined"!=typeof window.khaus[t])?window.khaus[t]=e:void 0}),t.khausLaunchAlerts(),""!==window.khaus.redirect?(e.data("khaus-reset")&&t(o)[0].reset(),t.isArray(window.khaus.redirect)?setTimeout(function(){return window.location=window.khaus.redirect[0]},window.khaus.redirect[1]):t.isPlainObject(window.khaus.redirect)?t.each(window.khaus.redirect,function(t,e){return setTimeout(function(){return window.location=t},e)}):window.location=window.khaus.redirect):void 0},error:function(a,n,r,o){var s;return t.khausCleanFormErrors(o),s="undefined"!=typeof a.responseJSON?a.responseJSON:t.parseJSON(a.responseText),t.khausDisplayFormErrors({errorsType:e.data("khaus-errortype")||"block",form:o,errors:s,resetForm:e.data("khaus-reset")||!1})}})})})},t.fn.khausNumberFormat=function(){var e;return e=function(t){return t=t.replace(/[^0-9]+/g,""),t=t.replace(/\B(?=(\d{3})+(?!\d))/g,".")},this.each(function(){var a;return t(this).is(":input")?(a=e(t(this).val()),t(this).val(a)):(a=e(t(this).html()),t(this).html(a))})},t.khausLoadSelect=function(e,a,n,r){return e.attr("disabled",!0),e.text(""),t.get(""+window.baseURL+a+"/"+n+".json",function(a){return t.each(a,function(){return t("<option>",{value:this.id}).text(this.nombre).appendTo(e)}),e.removeAttr("disabled"),e.val(e.find("option[value="+r+"]").size()>0?r:e.find("option:first").attr("value"))})},t.fn.khausLoadSelect=function(e){var a;return a=t.extend({url:t(this).data("khaus-url"),select:t(this).data("khaus-select"),selected:t(this).data("khaus-selected")},e),this.each(function(){var e;return e=t(a.select),this.value?t.khausLoadSelect(e,a.url,this.value,a.selected):(e.text(""),e.attr("disabled",!0)),t(this).on("change",function(){return t.khausLoadSelect(e,a.url,this.value,a.selected)})})},t.fn.khausClone=function(){return this.each(function(){return t(this).on("click",function(e){var a,n,r;return e.preventDefault(),n=t(this).data("khaus-clone"),r=t(n).last(),a=r.clone(),a.find(":input[name]").each(function(){var e,a,n;return a=t(this).attr("name"),e=a.match(/\[(\d+)\]/),e?(e=parseInt(e[1]),n=a.replace("["+e+"]","["+(e+1)+"]"),t(this).attr("name",n)):void 0}),a.find("input").val(""),a.find("select option:first").attr("selected",!0),a.find(":button[data-khaus-removeparent]").khausRemoveParent(),a.insertAfter(r)})})},t.fn.khausRemoveParent=function(){return this.each(function(){return t(this).on("click",function(e){var a,n;return e.preventDefault(),a=t(this).data("khaus-removeparent"),n=t(this).parents(a),n.remove()})})}}(jQuery),$(document).ready(function(){return $("form").khausAttachName(),$.khausLaunchFormErrors(),$.khausLaunchAlerts(),$("form.khaus-form").khausForm(),$("form[data-khaus-confirm]").khausConfirmBeforeSubmit(),$(":button[data-khaus-clone]").khausClone(),$(":button[data-khaus-removeparent]").khausRemoveParent(),$(":button[data-khaus-alert]").khausAlert(),$(".khaus-numero").khausNumberFormat(),$("select[data-khaus-select]").khausLoadSelect()});
-//# sourceMappingURL=app.js.map
+(function($) {
+
+  /* MULTIUPLOADER DE IMAGENES
+   * ==========================================================================
+   * Transforma un input file en un uploader multiple de imagenes con preview
+   * ==========================================================================
+   */
+  $.fn.khausImageUploader = function() {
+    return $.each(this, function(key, div) {
+      var images, input, inputName;
+      images = $(div).find('img.khaus-uploaded-thumb');
+      images.on('click', function() {
+        var filename;
+        filename = $(this).attr('src').split('/').pop();
+        $('<input>', {
+          type: 'hidden',
+          name: 'khaus_delete_thumb[]',
+          value: filename
+        }).appendTo(div);
+        return $(this).remove();
+      });
+      input = $(div).find(':input[type=file]');
+      inputName = input.attr('name');
+      input.removeAttr('name');
+      return input.on('change', function(ev) {
+        if ($(this).val()) {
+          $.each(ev.target.files, function(key, value) {
+            var reader;
+            if (value.type.match('image.*')) {
+              reader = new FileReader();
+              reader.onload = (function(file) {
+                return function(e) {
+                  var id;
+                  id = btoa($.now());
+                  id = id.replace(/[^a-z]+/ig, '');
+                  $('<input>', {
+                    'class': id,
+                    'type': 'hidden',
+                    'name': inputName + '[]',
+                    'value': e.target.result
+                  }).prependTo(div);
+                  return $('<img>', {
+                    'class': 'khaus-upload-thumb',
+                    'src': e.target.result
+                  }).on('click', function() {
+                    $('input.' + id + '').remove();
+                    return $(this).remove();
+                  }).prependTo(div);
+                };
+              })(value);
+            }
+            return reader.readAsDataURL(value);
+          });
+          return $(this).val('');
+        }
+      });
+    });
+  };
+
+  /* LIMPIA LOS ERRORES DEL FORMULARIO BOOTSTRAP
+   * ==========================================================================
+   * @param DOMElement form - formulario
+   * ==========================================================================
+   */
+  $.khausCleanFormErrors = function(form) {
+    $(form).find(".form-group").removeClass("has-error has-feedback");
+    $(form).find("span.form-control-feedback").remove();
+    $(form).find("span.help-block").remove();
+    return $(form).find(":input").tooltip("destroy");
+  };
+
+  /* DESPLIEGA LOS ERRORES DE FORMULARIO
+   * ==========================================================================
+   * @param string type (block|tooltip) forma de mostrar errores
+   * @param DOMElement form - formulario que realizo el envio
+   * @param object errors - errores {'inputName':'Error Message'}
+  #
+   * En caso de que no se envie el parametro errors, buscara esos datos
+   * dentro de la variable global khaus
+   * ==========================================================================
+   */
+  $.khausDisplayFormErrors = function(settings) {
+    var counter, o;
+    o = $.extend({
+      errorsType: 'block',
+      form: null,
+      errors: window.khaus.errors,
+      resetForm: false
+    }, settings);
+    counter = 0;
+    $.each(o.errors, function(key, value) {
+      var badge, inTab, input, page, pageName, tab;
+      if (key.match(/^khaus/)) {
+        key = key.replace('khaus', '').toLowerCase();
+        if (typeof window.khaus[key] !== 'undefined') {
+          window.khaus[key] = value;
+          return true;
+        }
+      }
+      counter++;
+      input = $(o.form).find(":input[name=" + key + "]");
+      if (input.size() !== 1) {
+        input = $(o.form).find(":input[name^='" + key + "[']");
+      }
+      input.parents('.form-group').addClass("has-error");
+      inTab = input.parents('.tab-content');
+      if (inTab.size() > 0) {
+        if (counter === 1) {
+          $('ul.nav-tabs .badge').remove();
+        }
+        page = input.parents('.tab-pane');
+        pageName = page.attr('id');
+        tab = $("ul.nav-tabs a[href=#" + pageName + "]");
+        badge = tab.find('.badge');
+        if (badge.length === 0) {
+          badge = $('<span>', {
+            'class': 'badge'
+          }).text(0);
+          badge.appendTo(tab);
+        }
+        badge.text(parseInt(badge.text()) + 1);
+      }
+      switch (o.errorsType) {
+        case 'block':
+          return $("<span>", {
+            "class": "help-block"
+          }).html(value).insertAfter(input);
+        case 'tooltip':
+          return input.tooltip({
+            placement: "top",
+            title: value,
+            container: "body"
+          });
+      }
+    });
+    $.khausLaunchAlerts();
+    if (counter === 0) {
+      if (o.resetForm) {
+        return $(o.form)[0].reset();
+      }
+    }
+  };
+
+  /* DESPLEGA UNA ALARTA O NOTIFICACION FLOTANTE
+   * ==========================================================================
+   * @param string title - titulo de la notificacion
+   * @param string message - mensaje de la notificacion
+   * @param object settings {
+   *   delay : (int) tiempo en milisegundos que permanecera la alerta en pantalla
+   *   template : (string) apariencia bootstrap default|primary|success|info|danger|warning
+   *   icon : (string) icono de la alerta req. Font Awesome ex: fa-plus
+   * }
+   * ==========================================================================
+   */
+  $.khausNotify = function(title, message, settings) {
+    var container, icon, icon_cont, message_cont, message_title, notify, o;
+    o = $.extend({
+      delay: 10000,
+      template: "default",
+      icon: null
+    }, settings);
+    container = $(".khaus-notify-container");
+    if (container.size() === 0) {
+      container = $("<div>", {
+        "class": "khaus-notify-container"
+      }).prependTo("body");
+    }
+    notify = $("<div>", {
+      "class": "khaus-notify khaus-notify-" + o.template
+    });
+    if (o.icon !== null) {
+      icon = $("<i>", {
+        "class": "fa fa-fw " + o.icon
+      });
+      icon_cont = $("<div>", {
+        "class": "icon-container"
+      }).html(icon);
+      notify.append(icon_cont);
+    }
+    message_cont = $("<div>", {
+      "class": "text-container"
+    });
+    message_title = $("<div>", {
+      "class": "title"
+    }).html(title).appendTo(message_cont);
+    message = $("<div>").html(message).appendTo(message_cont);
+    notify.append(message_cont);
+    notify.appendTo(container);
+    notify.on("click", function() {
+      $(this).removeClass("khaus-notify-show");
+      $(this).addClass("khaus-notify-hide");
+      return $(this).one("webkitTransitionEnd otransitionend oTransitionEnd msTransitionEnd transitionend", function() {
+        return $(this).remove();
+      });
+    });
+    return setTimeout(function() {
+      notify.addClass("khaus-notify-show");
+      return setTimeout(function() {
+        return notify.trigger("click");
+      }, o.delay);
+    }, 1);
+  };
+
+  /* MUESTRA LOS ERRORES ALMACENADOS EN LAS VARIABLES KHAUS
+   * ==========================================================================
+   * 
+   * ==========================================================================
+   */
+  $.khausLaunchFormErrors = function() {
+    var form;
+    if (!!window.khaus.errors && !!window.khaus.form) {
+      form = $("form[name=" + window.khaus.form + "]");
+      return $.khausDisplayFormErrors({
+        errorsType: 'block',
+        form: form
+      });
+    }
+  };
+
+  /*
+   * ==========================================================================
+   * 
+   * ==========================================================================
+   */
+  $.khausLaunchAlerts = function(settings) {
+    var o;
+    o = $.extend({
+      title: {
+        "default": "",
+        primary: "",
+        success: "El proceso ha finalizado",
+        danger: "Ha ocurrido un error",
+        warning: "Importante",
+        info: "Informaci&oacute;n"
+      }
+    }, settings);
+    return $.each(o.title, function(key, value) {
+      if (!!window.khaus[key]) {
+        if ($.isArray(window.khaus[key])) {
+          $.khausNotify(window.khaus[key][0], window.khaus[key][1], {
+            template: key
+          });
+        } else if ($.isPlainObject(window.khaus[key])) {
+          $.each(window.khaus[key], function(titulo, mensaje) {
+            return $.khausNotify(titulo, mensaje, {
+              template: key
+            });
+          });
+        } else {
+          $.khausNotify(value, window.khaus[key], {
+            template: key
+          });
+        }
+        return window.khaus[key] = '';
+      }
+    });
+  };
+
+  /*
+   * ==========================================================================
+   * 
+   * ==========================================================================
+   */
+  $.khausAjaxWait = function(settings) {
+    var o;
+    o = $.extend({
+      type: 'cursor'
+    }, settings);
+    switch (o.type) {
+      case 'cursor':
+        return $.ajaxSetup({
+          beforeSend: function() {
+            return $('body').addClass('khaus-ajax-wait');
+          },
+          complete: function() {
+            return $('body').removeClass('khaus-ajax-wait');
+          },
+          success: function() {
+            return $('body').removeClass('khaus-ajax-wait');
+          }
+        });
+    }
+  };
+
+  /* ADJUNTA AL FORMULARIO EL PARAMETRO NAME
+   * ==========================================================================
+   * Si el formulario tiene el atributo [name] activado 
+   * antes de realizar el envio de los parametros
+   * agrega un input hidden name="_name" value="<nombre del formulario>"
+   * ==========================================================================
+   */
+  $.fn.khausAttachName = function() {
+    return $.each(this, function() {
+      return $(this).on('submit', function(ev) {
+        if ($(this).is('[name]') && $(this).find('input[name=_name]').size() === 0) {
+          return $('<input>', {
+            'name': '_name',
+            'type': 'hidden',
+            'value': $(this).attr('name')
+          }).prependTo($(this));
+        }
+      });
+    });
+  };
+
+  /* CAPTURA EL EVENTO SUBMIT Y ENVIA UN MODAL KHAUS CONFIRM
+   * ==========================================================================
+   * @param object settings {
+   *   title : (string) - titulo de la ventana modal
+   *   message : (string) - mensaje de la ventana modal
+   * }
+   * Al presionar el boton aceptar del modal se realizara el submit del formulario
+   * de lo contrario no se realizara ninguna accion
+   * ==========================================================================
+   */
+  $.fn.khausConfirmBeforeSubmit = function() {
+    return $.each(this, function() {
+      var message, title;
+      title = $(this).data('khaus-title' || '');
+      message = $(this).data('khaus-confirm' || '');
+      return $(this).on('submit', function(ev) {
+        var e;
+        ev.preventDefault();
+        e = $(this);
+        return $.khausConfirm(title, message, function() {
+          e.off('submit');
+          return e.submit();
+        });
+      });
+    });
+  };
+
+  /* 
+   * ==========================================================================
+   * Envia un modal de alerta con las opciones aceptar y cancelar
+   * Metodos de llamada:
+   * - por codigo: $.khausAlert('Titulo', 'Mensaje');
+   * - por dom: <button data-khaus-alert="Mensaje" data-khaus-title="Opcional">
+   * El titulo es opcional en la llamada por dom
+   * ==========================================================================
+   */
+  $.khausAlert = function(title, message) {
+    var modal_D1, modal_D2, modal_D3, modal_body, modal_footer, modal_header;
+    if ($(".khaus-modal-alert").size() > 0) {
+      $(".khaus-modal-alert").remove();
+    }
+    modal_D1 = $("<div>", {
+      "class": "modal fade khaus-modal-alert"
+    });
+    modal_D2 = $("<div>", {
+      "class": "modal-dialog"
+    }).appendTo(modal_D1);
+    modal_D3 = $("<div>", {
+      "class": "modal-content"
+    }).appendTo(modal_D2);
+    modal_header = $("<div>", {
+      "class": "modal-header"
+    }).appendTo(modal_D3);
+    $("<h4>", {
+      "class": "modal-title"
+    }).html(title).appendTo(modal_header);
+    modal_body = $("<div>", {
+      "class": "modal-body"
+    }).html(message).appendTo(modal_D3);
+    modal_footer = $("<div>", {
+      "class": "modal-footer"
+    }).appendTo(modal_D3);
+    $("<button>", {
+      "type": "button",
+      "class": "btn btn-primary",
+      "data-dismiss": "modal"
+    }).html("Aceptar").appendTo(modal_footer);
+    return modal_D1.modal("show");
+  };
+  $.fn.khausAlert = function() {
+    return this.each(function() {
+      return $(this).on('click', function(ev) {
+        var message, title;
+        message = $(this).data('khaus-alert');
+        title = $(this).data('khaus-title' || '');
+        return $.khausAlert(title, message);
+      });
+    });
+  };
+
+  /*
+   * ==========================================================================
+   * 
+   * ==========================================================================
+   */
+  $.khausPrompt = function(title, message, defaultValue, callback) {
+    var input_prompt, modal_D1, modal_D2, modal_D3, modal_body, modal_footer, modal_header;
+    if (defaultValue == null) {
+      defaultValue = "";
+    }
+    if (callback == null) {
+      callback = function() {};
+    }
+    if ($(".khaus-modal-prompt").size() > 0) {
+      $(".khaus-modal-prompt").remove();
+    }
+    modal_D1 = $("<div>", {
+      "class": "modal fade khaus-modal-prompt"
+    });
+    modal_D2 = $("<div>", {
+      "class": "modal-dialog"
+    }).appendTo(modal_D1);
+    modal_D3 = $("<div>", {
+      "class": "modal-content"
+    }).appendTo(modal_D2);
+    modal_header = $("<div>", {
+      "class": "modal-header"
+    }).appendTo(modal_D3);
+    $("<h4>", {
+      "class": "modal-title"
+    }).html(title).appendTo(modal_header);
+    modal_body = $("<div>", {
+      "class": "modal-body"
+    }).appendTo(modal_D3);
+    $("<h5>").css({
+      "font-weight": "bold"
+    }).html(message).appendTo(modal_body);
+    input_prompt = $("<input>", {
+      "type": "text",
+      "class": "form-control"
+    }).val(defaultValue).appendTo(modal_body);
+    modal_footer = $("<div>", {
+      "class": "modal-footer"
+    }).appendTo(modal_D3);
+    $("<button>", {
+      "type": "button",
+      "class": "btn btn-default",
+      "data-dismiss": "modal"
+    }).html("Cancelar").appendTo(modal_footer);
+    $("<button>", {
+      "type": "button",
+      "class": "btn btn-primary",
+      "data-dismiss": "modal"
+    }).html("Aceptar").on("click", function() {
+      callback(input_prompt.val());
+    }).appendTo(modal_footer);
+    modal_D1.modal("show");
+    return setTimeout(function() {
+      return input_prompt.select();
+    }, 200);
+  };
+
+  /*
+   * ==========================================================================
+   * 
+   * ==========================================================================
+   */
+  $.khausConfirm = function(title, message, callback) {
+    var modal_D1, modal_D2, modal_D3, modal_body, modal_footer, modal_header;
+    if (callback == null) {
+      callback = function() {};
+    }
+    if ($(".khaus-modal-confirm").size() > 0) {
+      $(".khaus-modal-confirm").remove();
+    }
+    modal_D1 = $("<div>", {
+      "class": "modal fade khaus-modal-confirm"
+    });
+    modal_D2 = $("<div>", {
+      "class": "modal-dialog"
+    }).appendTo(modal_D1);
+    modal_D3 = $("<div>", {
+      "class": "modal-content"
+    }).appendTo(modal_D2);
+    modal_header = $("<div>", {
+      "class": "modal-header"
+    }).appendTo(modal_D3);
+    $("<h4>", {
+      "class": "modal-title"
+    }).html(title).appendTo(modal_header);
+    modal_body = $("<div>", {
+      "class": "modal-body"
+    }).html(message).appendTo(modal_D3);
+    modal_footer = $("<div>", {
+      "class": "modal-footer"
+    }).appendTo(modal_D3);
+    $("<button>", {
+      "type": "button",
+      "class": "btn btn-default",
+      "data-dismiss": "modal"
+    }).html("Cancelar").appendTo(modal_footer);
+    $("<button>", {
+      "type": "button",
+      "class": "btn btn-primary",
+      "data-dismiss": "modal"
+    }).html("Aceptar").on("click", function() {
+      callback();
+    }).appendTo(modal_footer);
+    return modal_D1.modal("show");
+  };
+
+  /* CAMBIA EL FUNCIONAMIENTO DE LOS FORMULARIOS POR PETICIONES AJAX
+   * ==========================================================================
+   * 
+   * ==========================================================================
+   */
+  $.fn.khausForm = function(settings) {
+    return $.each(this, function() {
+      var form;
+      form = $(this);
+      return form.on('submit', function(ev) {
+        return form.ajaxForm({
+          delegation: true,
+          success: function(response, status, xhr, $form) {
+            $.each(response, function(key, value) {
+              if (key.match(/^khaus/)) {
+                key = key.replace('khaus', '').toLowerCase();
+                if (typeof window.khaus[key] !== 'undefined') {
+                  return window.khaus[key] = value;
+                }
+              }
+            });
+            $.khausLaunchAlerts();
+            if (window.khaus.redirect !== "") {
+              if (form.data('khaus-reset') || false) {
+                $($form)[0].reset();
+              }
+              if ($.isArray(window.khaus.redirect)) {
+                return setTimeout(function() {
+                  return window.location = window.khaus.redirect[0];
+                }, window.khaus.redirect[1]);
+              } else if ($.isPlainObject(window.khaus.redirect)) {
+                return $.each(window.khaus.redirect, function(url, tiempo) {
+                  return setTimeout(function() {
+                    return window.location = url;
+                  }, tiempo);
+                });
+              } else {
+                return window.location = window.khaus.redirect;
+              }
+            }
+          },
+          error: function(response, status, xhr, $form) {
+            var errors;
+            $.khausCleanFormErrors($form);
+            if (typeof response.responseJSON !== 'undefined') {
+              errors = response.responseJSON;
+            } else {
+              errors = $.parseJSON(response.responseText);
+            }
+            return $.khausDisplayFormErrors({
+              errorsType: form.data('khaus-errortype') || 'block',
+              form: $form,
+              errors: errors,
+              resetForm: form.data('khaus-reset') || false
+            });
+          }
+        });
+      });
+    });
+  };
+
+  /*
+   * ==========================================================================
+   * 
+   * ==========================================================================
+   */
+  $.fn.khausNumberFormat = function() {
+    var replace;
+    replace = function(number) {
+      number = number.replace(/[^0-9]+/g, '');
+      return number = number.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    };
+    return this.each(function() {
+      var number;
+      if ($(this).is(':input')) {
+        number = replace($(this).val());
+        return $(this).val(number);
+      } else {
+        number = replace($(this).html());
+        return $(this).html(number);
+      }
+    });
+  };
+
+  /*
+   * ==========================================================================
+   * 
+   * ==========================================================================
+   */
+  $.khausLoadSelect = function($select, url, fk, selected) {
+    $select.attr('disabled', true);
+    $select.text('');
+    return $.get("" + window.baseURL + url + "/" + fk + ".json", function(r) {
+      $.each(r, function() {
+        return $('<option>', {
+          value: this.id
+        }).text(this.nombre).appendTo($select);
+      });
+      $select.removeAttr('disabled');
+      if ($select.find("option[value=" + selected + "]").size() > 0) {
+        return $select.val(selected);
+      } else {
+        return $select.val($select.find('option:first').attr('value'));
+      }
+    });
+  };
+  $.fn.khausLoadSelect = function(settings) {
+    var o;
+    o = $.extend({
+      url: $(this).data('khaus-url'),
+      select: $(this).data('khaus-select'),
+      selected: $(this).data('khaus-selected' || 1)
+    }, settings);
+    return this.each(function() {
+      var $select;
+      $select = $(o.select);
+      if (this.value) {
+        $.khausLoadSelect($select, o.url, this.value, o.selected);
+      } else {
+        $select.text('');
+        $select.attr('disabled', true);
+      }
+      return $(this).on('change', function() {
+        return $.khausLoadSelect($select, o.url, this.value, o.selected);
+      });
+    });
+  };
+
+  /*
+   * ==========================================================================
+   * 
+   * ==========================================================================
+   */
+  $.fn.khausClone = function() {
+    return this.each(function() {
+      return $(this).on('click', function(ev) {
+        var clon, selector, target;
+        ev.preventDefault();
+        selector = $(this).data('khaus-clone');
+        target = $(selector).last();
+        clon = target.clone();
+        clon.find(':input[name]').each(function() {
+          var key, name, newName;
+          name = $(this).attr('name');
+          key = name.match(/\[(\d+)\]/);
+          if (!!key) {
+            key = parseInt(key[1]);
+            newName = name.replace("[" + key + "]", "[" + (key + 1) + "]");
+            return $(this).attr('name', newName);
+          }
+        });
+        clon.find('input').val('');
+        clon.find('select option:first').attr('selected', true);
+        clon.find(':button[data-khaus-removeparent]').khausRemoveParent();
+        return clon.insertAfter(target);
+      });
+    });
+  };
+
+  /*
+   * ==========================================================================
+   * 
+   * ==========================================================================
+   */
+  return $.fn.khausRemoveParent = function() {
+    return this.each(function() {
+      return $(this).on('click', function(ev) {
+        var selector, target;
+        ev.preventDefault();
+        selector = $(this).data('khaus-removeparent');
+        target = $(this).parents(selector);
+        return target.remove();
+      });
+    });
+  };
+})(jQuery);
+
+$(document).ready(function() {
+  $('form').khausAttachName();
+  $.khausLaunchFormErrors();
+  $.khausLaunchAlerts();
+  $('form.khaus-form').khausForm();
+  $('form[data-khaus-confirm]').khausConfirmBeforeSubmit();
+  $(':button[data-khaus-clone]').khausClone();
+  $(':button[data-khaus-removeparent]').khausRemoveParent();
+  $(':button[data-khaus-alert]').khausAlert();
+  $('.khaus-numero').khausNumberFormat();
+  return $('select[data-khaus-select]').khausLoadSelect();
+});
