@@ -1,12 +1,16 @@
 {
   "name": "khausjs",
   "version": "1.0.3",
-  "homepage": "https://github.com/Niucode/khausjs",
+  "homepage": "https://github.com/niucode/khausjs",
   "authors": [
     "rhyudek1 <rhyudek1@gmail.com>"
   ],
   "description": "Front End components compatible with laravel 5",
   "license": "MIT",
+  "main": [
+    "dist/css/app.css",
+    "dist/js/app.js",
+  ],
   "ignore": [
     "**/.*",
     "node_modules",
