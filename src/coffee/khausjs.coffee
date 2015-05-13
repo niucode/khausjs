@@ -368,15 +368,15 @@ do ($=jQuery) ->
                                 $($form)[0].reset()
                             if $.isArray(window.khaus.redirect)
                                 setTimeout(->
-                                    window.location = window.khaus.redirect[0]
+                                    window.location = window.baseURL+window.khaus.redirect[0]
                                 , window.khaus.redirect[1])
                             else if $.isPlainObject(window.khaus.redirect)
                                 $.each window.khaus.redirect, (url, tiempo)->
                                     setTimeout(->
-                                        window.location = url
+                                        window.location = window.baseURL+url
                                     , tiempo)
                             else
-                                window.location = window.khaus.redirect
+                                window.location = window.baseURL+window.khaus.redirect
                     error: (response, status, xhr, $form)->
                         $.khausCleanFormErrors($form)
                         if typeof response.responseJSON isnt 'undefined'

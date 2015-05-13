@@ -522,16 +522,16 @@
               }
               if ($.isArray(window.khaus.redirect)) {
                 return setTimeout(function() {
-                  return window.location = window.khaus.redirect[0];
+                  return window.location = window.baseURL + window.khaus.redirect[0];
                 }, window.khaus.redirect[1]);
               } else if ($.isPlainObject(window.khaus.redirect)) {
                 return $.each(window.khaus.redirect, function(url, tiempo) {
                   return setTimeout(function() {
-                    return window.location = url;
+                    return window.location = window.baseURL + url;
                   }, tiempo);
                 });
               } else {
-                return window.location = window.khaus.redirect;
+                return window.location = window.baseURL + window.khaus.redirect;
               }
             }
           },
