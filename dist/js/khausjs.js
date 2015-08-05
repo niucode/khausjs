@@ -74,7 +74,7 @@
    * @param string type (block|tooltip) forma de mostrar errores
    * @param DOMElement form - formulario que realizo el envio
    * @param object errors - errores {'inputName':'Error Message'}
-  #
+   *
    * En caso de que no se envie el parametro errors, buscara esos datos
    * dentro de la variable global khaus
    * ==========================================================================
@@ -89,7 +89,7 @@
     }, settings);
     counter = 0;
     $.each(o.errors, function(key, value) {
-      var badge, inTab, input, page, pageName, tab;
+      var badge, inTab, input, page, pageName, pos, tab;
       if (key.match(/^khaus/)) {
         key = key.replace('khaus', '').toLowerCase();
         if (typeof window.khaus[key] !== 'undefined') {
@@ -122,9 +122,10 @@
       }
       switch (o.errorsType) {
         case 'block':
+          pos = input.parents('.form-group');
           return $("<span>", {
             "class": "help-block"
-          }).html(value).insertAfter(input);
+          }).html(value).appendTo(pos);
         case 'tooltip':
           return input.tooltip({
             placement: "top",

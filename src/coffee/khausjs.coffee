@@ -99,7 +99,8 @@ do ($=jQuery) ->
                 badge.text parseInt(badge.text()) + 1
             switch o.errorsType
                 when 'block'
-                    $("<span>", "class":"help-block").html(value).insertAfter input
+                    pos = input.parents '.form-group'
+                    $("<span>", "class":"help-block").html(value).appendTo pos
                 when 'tooltip'
                     input.tooltip(
                         placement : "top"
