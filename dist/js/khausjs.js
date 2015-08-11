@@ -321,6 +321,7 @@
       message = $(this).data('khaus-confirm' || '');
       return $(this).on('submit', function(ev) {
         var e;
+        $(':focus').blur();
         ev.preventDefault();
         e = $(this);
         return $.khausConfirm(title, message, function() {
@@ -452,7 +453,7 @@
    * ==========================================================================
    */
   $.khausConfirm = function(title, message, callback) {
-    var modal_D1, modal_D2, modal_D3, modal_body, modal_footer, modal_header;
+    var btnAceptar, modal_D1, modal_D2, modal_D3, modal_body, modal_footer, modal_header;
     if (callback == null) {
       callback = function() {};
     }
@@ -485,13 +486,16 @@
       "class": "btn btn-default",
       "data-dismiss": "modal"
     }).html("Cancelar").appendTo(modal_footer);
-    $("<button>", {
+    btnAceptar = $("<button>", {
       "type": "button",
       "class": "btn btn-primary",
       "data-dismiss": "modal"
     }).html("Aceptar").on("click", function() {
       callback();
     }).appendTo(modal_footer);
+    setTimeout(function() {
+      return btnAceptar.focus();
+    }, 300);
     return modal_D1.modal("show");
   };
 
@@ -508,6 +512,7 @@
         return form.ajaxForm({
           delegation: true,
           success: function(response, status, xhr, $form) {
+            var location, ref;
             $.each(response, function(key, value) {
               if (key.match(/^khaus/)) {
                 key = key.replace('khaus', '').toLowerCase();
@@ -523,16 +528,30 @@
               }
               if ($.isArray(window.khaus.redirect)) {
                 return setTimeout(function() {
-                  return window.location = window.baseURL + window.khaus.redirect[0];
+                  var location, ref;
+                  location = window.khaus.redirect[0];
+                  location = (ref = location.match(/^http:\/\//i)) != null ? ref : {
+                    location: window.baseURL + location
+                  };
+                  return window.location = location;
                 }, window.khaus.redirect[1]);
               } else if ($.isPlainObject(window.khaus.redirect)) {
                 return $.each(window.khaus.redirect, function(url, tiempo) {
                   return setTimeout(function() {
-                    return window.location = window.baseURL + url;
+                    var location, ref;
+                    location = url;
+                    location = (ref = location.match(/^http:\/\//i)) != null ? ref : {
+                      location: window.baseURL + location
+                    };
+                    return window.location = location;
                   }, tiempo);
                 });
               } else {
-                return window.location = window.baseURL + window.khaus.redirect;
+                location = window.khaus.redirect;
+                location = (ref = location.match(/^http:\/\//i)) != null ? ref : {
+                  location: window.baseURL + location
+                };
+                return window.location = location;
               }
             }
           },

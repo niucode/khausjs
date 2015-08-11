@@ -256,6 +256,7 @@ do ($=jQuery) ->
             title = $(@).data 'khaus-title' || ''
             message = $(@).data 'khaus-confirm' || ''
             $(@).on 'submit', (ev)->
+                $(':focus').blur()
                 ev.preventDefault()
                 e = $(@)
                 $.khausConfirm title, message, ->
@@ -337,12 +338,15 @@ do ($=jQuery) ->
         modal_body = $("<div>", "class":"modal-body").html(message).appendTo modal_D3
         modal_footer = $("<div>", "class":"modal-footer").appendTo modal_D3
         $("<button>", "type":"button", "class":"btn btn-default", "data-dismiss":"modal").html("Cancelar").appendTo modal_footer
-        $("<button>", "type":"button", "class":"btn btn-primary", "data-dismiss":"modal")
+        btnAceptar = $("<button>", "type":"button", "class":"btn btn-primary", "data-dismiss":"modal")
             .html("Aceptar")
             .on "click", ->
                 callback()
                 return
             .appendTo modal_footer
+        setTimeout(->
+            btnAceptar.focus()
+        , 300)
         modal_D1.modal "show"
 
 
@@ -369,15 +373,21 @@ do ($=jQuery) ->
                                 $($form)[0].reset()
                             if $.isArray(window.khaus.redirect)
                                 setTimeout(->
-                                    window.location = window.baseURL+window.khaus.redirect[0]
+                                    location = window.khaus.redirect[0]
+                                    location = location.match(/^http:\/\//i) ? location : window.baseURL + location;
+                                    window.location = location
                                 , window.khaus.redirect[1])
                             else if $.isPlainObject(window.khaus.redirect)
                                 $.each window.khaus.redirect, (url, tiempo)->
                                     setTimeout(->
-                                        window.location = window.baseURL+url
+                                        location = url
+                                        location = location.match(/^http:\/\//i) ? location : window.baseURL + location;
+                                        window.location = location
                                     , tiempo)
                             else
-                                window.location = window.baseURL+window.khaus.redirect
+                                location = window.khaus.redirect
+                                location = location.match(/^http:\/\//i) ? location : window.baseURL + location;
+                                window.location = location
                     error: (response, status, xhr, $form)->
                         $.khausCleanFormErrors($form)
                         if typeof response.responseJSON isnt 'undefined'
