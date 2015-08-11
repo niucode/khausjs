@@ -374,19 +374,22 @@ do ($=jQuery) ->
                             if $.isArray(window.khaus.redirect)
                                 setTimeout(->
                                     location = window.khaus.redirect[0]
-                                    location = location.match(/^http:\/\//i) ? location : window.baseURL + location;
+                                    if not location.match(/^http:\/\//i)
+                                        location = window.baseURL + location;
                                     window.location = location
                                 , window.khaus.redirect[1])
                             else if $.isPlainObject(window.khaus.redirect)
                                 $.each window.khaus.redirect, (url, tiempo)->
                                     setTimeout(->
                                         location = url
-                                        location = location.match(/^http:\/\//i) ? location : window.baseURL + location;
+                                        if not location.match(/^http:\/\//i)
+                                            location = window.baseURL + location;
                                         window.location = location
                                     , tiempo)
                             else
                                 location = window.khaus.redirect
-                                location = location.match(/^http:\/\//i) ? location : window.baseURL + location;
+                                if not location.match(/^http:\/\//i)
+                                    location = window.baseURL + location;
                                 window.location = location
                     error: (response, status, xhr, $form)->
                         $.khausCleanFormErrors($form)

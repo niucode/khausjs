@@ -512,7 +512,7 @@
         return form.ajaxForm({
           delegation: true,
           success: function(response, status, xhr, $form) {
-            var location, ref;
+            var location;
             $.each(response, function(key, value) {
               if (key.match(/^khaus/)) {
                 key = key.replace('khaus', '').toLowerCase();
@@ -528,29 +528,29 @@
               }
               if ($.isArray(window.khaus.redirect)) {
                 return setTimeout(function() {
-                  var location, ref;
+                  var location;
                   location = window.khaus.redirect[0];
-                  location = (ref = location.match(/^http:\/\//i)) != null ? ref : {
-                    location: window.baseURL + location
-                  };
+                  if (!location.match(/^http:\/\//i)) {
+                    location = window.baseURL + location;
+                  }
                   return window.location = location;
                 }, window.khaus.redirect[1]);
               } else if ($.isPlainObject(window.khaus.redirect)) {
                 return $.each(window.khaus.redirect, function(url, tiempo) {
                   return setTimeout(function() {
-                    var location, ref;
+                    var location;
                     location = url;
-                    location = (ref = location.match(/^http:\/\//i)) != null ? ref : {
-                      location: window.baseURL + location
-                    };
+                    if (!location.match(/^http:\/\//i)) {
+                      location = window.baseURL + location;
+                    }
                     return window.location = location;
                   }, tiempo);
                 });
               } else {
                 location = window.khaus.redirect;
-                location = (ref = location.match(/^http:\/\//i)) != null ? ref : {
-                  location: window.baseURL + location
-                };
+                if (!location.match(/^http:\/\//i)) {
+                  location = window.baseURL + location;
+                }
                 return window.location = location;
               }
             }
