@@ -71,49 +71,6 @@ do ($=jQuery) ->
                 $(o.form)[0].reset()
 
 
-    ### DESPLEGA UNA ALARTA O NOTIFICACION FLOTANTE
-    # ==========================================================================
-    # @param string title - titulo de la notificacion
-    # @param string message - mensaje de la notificacion
-    # @param object settings {
-    #   delay : (int) tiempo en milisegundos que permanecera la alerta en pantalla
-    #   template : (string) apariencia bootstrap default|primary|success|info|danger|warning
-    #   icon : (string) icono de la alerta req. Font Awesome ex: fa-plus
-    # }
-    # ==========================================================================
-    ###
-    $.khausNotify = (title, message, settings) ->
-        o = $.extend
-            delay : 10000
-            template: "default"
-            icon : null
-        , settings
-        container = $(".khaus-notify-container")
-        if container.size() == 0
-            container = $("<div>", "class":"khaus-notify-container").prependTo "body"
-        notify = $("<div>", "class":"khaus-notify khaus-notify-#{o.template}")
-        if o.icon isnt null
-            icon =  $("<i>", "class":"fa fa-fw #{o.icon}")
-            icon_cont = $("<div>", class:"icon-container").html icon
-            notify.append icon_cont
-        message_cont = $("<div>", class:"text-container")
-        message_title = $("<div>", class:"title").html(title).appendTo message_cont
-        message = $("<div>").html(message).appendTo message_cont
-        notify.append message_cont
-        notify.appendTo container
-        notify.on "click", ->
-            $(@).removeClass "khaus-notify-show"
-            $(@).addClass "khaus-notify-hide"
-            $(@).one "webkitTransitionEnd otransitionend oTransitionEnd msTransitionEnd transitionend", ->
-                $(@).remove()
-        setTimeout ->
-            notify.addClass "khaus-notify-show"
-            setTimeout ->
-                notify.trigger "click"
-            , o.delay
-        , 1
-
-
     ### MUESTRA LOS ERRORES ALMACENADOS EN LAS VARIABLES KHAUS
     # ==========================================================================
     # 
@@ -144,19 +101,24 @@ do ($=jQuery) ->
         , settings
         $.each o.title, (key, value)->
             if !!window.khaus[key]
-                if $.isArray(window.khaus[key])
-                    $.khausNotify(window.khaus[key][0], window.khaus[key][1], {
-                        template : key
-                    })
-                else if $.isPlainObject(window.khaus[key])
-                    $.each window.khaus[key], (titulo, mensaje)->
-                        $.khausNotify(titulo, mensaje, {
-                            template : key
-                        })
+                template = key
+                if key is 'default'
+                    template = 'alert'
+                if key is 'danger'
+                    template = 'error'
+                if key is 'info'
+                    template = 'information'
+                if $.isPlainObject(window.khaus[key]) or $.isArray(window.khaus[key])
+                    $.each window.khaus[key], (k, mensaje)->
+                        n = noty(
+                            text: mensaje
+                            type: template
+                        )
                 else
-                    $.khausNotify(value, window.khaus[key], {
-                        template : key
-                    })
+                    n = noty(
+                        text: window.khaus[key]
+                        type: template
+                    )
                 window.khaus[key] = ''
 
     ###
@@ -314,7 +276,7 @@ do ($=jQuery) ->
     # ==========================================================================
     ###
     $.fn.khausForm = (settings)->
-        o = $.extends(
+        o = $.extend(
             onSuccess: ->
             onError: ->
         , settings)
@@ -461,7 +423,14 @@ do ($=jQuery) ->
 
     
 
-$(document).ready ->
+$ ->
+    # noty defaults options
+    $.noty.defaults.theme = 'relax'
+    $.noty.defaults.layout = 'bottomRight'
+    $.noty.defaults.timeout = 8000
+    $.noty.defaults.animation.open = 'animated bounceInRight'
+    $.noty.defaults.animation.close = 'animated bounceOutRight'
+
     $('form').khausAttachName()
     $.khausLaunchFormErrors()
     $.khausLaunchAlerts()

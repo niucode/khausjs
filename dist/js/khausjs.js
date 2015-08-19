@@ -85,66 +85,6 @@
     }
   };
 
-  /* DESPLEGA UNA ALARTA O NOTIFICACION FLOTANTE
-   * ==========================================================================
-   * @param string title - titulo de la notificacion
-   * @param string message - mensaje de la notificacion
-   * @param object settings {
-   *   delay : (int) tiempo en milisegundos que permanecera la alerta en pantalla
-   *   template : (string) apariencia bootstrap default|primary|success|info|danger|warning
-   *   icon : (string) icono de la alerta req. Font Awesome ex: fa-plus
-   * }
-   * ==========================================================================
-   */
-  $.khausNotify = function(title, message, settings) {
-    var container, icon, icon_cont, message_cont, message_title, notify, o;
-    o = $.extend({
-      delay: 10000,
-      template: "default",
-      icon: null
-    }, settings);
-    container = $(".khaus-notify-container");
-    if (container.size() === 0) {
-      container = $("<div>", {
-        "class": "khaus-notify-container"
-      }).prependTo("body");
-    }
-    notify = $("<div>", {
-      "class": "khaus-notify khaus-notify-" + o.template
-    });
-    if (o.icon !== null) {
-      icon = $("<i>", {
-        "class": "fa fa-fw " + o.icon
-      });
-      icon_cont = $("<div>", {
-        "class": "icon-container"
-      }).html(icon);
-      notify.append(icon_cont);
-    }
-    message_cont = $("<div>", {
-      "class": "text-container"
-    });
-    message_title = $("<div>", {
-      "class": "title"
-    }).html(title).appendTo(message_cont);
-    message = $("<div>").html(message).appendTo(message_cont);
-    notify.append(message_cont);
-    notify.appendTo(container);
-    notify.on("click", function() {
-      $(this).removeClass("khaus-notify-show");
-      $(this).addClass("khaus-notify-hide");
-      return $(this).one("webkitTransitionEnd otransitionend oTransitionEnd msTransitionEnd transitionend", function() {
-        return $(this).remove();
-      });
-    });
-    return setTimeout(function() {
-      notify.addClass("khaus-notify-show");
-      return setTimeout(function() {
-        return notify.trigger("click");
-      }, o.delay);
-    }, 1);
-  };
-
   /* MUESTRA LOS ERRORES ALMACENADOS EN LAS VARIABLES KHAUS
    * ==========================================================================
    * 
@@ -179,20 +119,30 @@
       }
     }, settings);
     return $.each(o.title, function(key, value) {
+      var n, template;
       if (!!window.khaus[key]) {
-        if ($.isArray(window.khaus[key])) {
-          $.khausNotify(window.khaus[key][0], window.khaus[key][1], {
-            template: key
-          });
-        } else if ($.isPlainObject(window.khaus[key])) {
-          $.each(window.khaus[key], function(titulo, mensaje) {
-            return $.khausNotify(titulo, mensaje, {
-              template: key
+        template = key;
+        if (key === 'default') {
+          template = 'alert';
+        }
+        if (key === 'danger') {
+          template = 'error';
+        }
+        if (key === 'info') {
+          template = 'information';
+        }
+        if ($.isPlainObject(window.khaus[key]) || $.isArray(window.khaus[key])) {
+          $.each(window.khaus[key], function(k, mensaje) {
+            var n;
+            return n = noty({
+              text: mensaje,
+              type: template
             });
           });
         } else {
-          $.khausNotify(value, window.khaus[key], {
-            template: key
+          n = noty({
+            text: window.khaus[key],
+            type: template
           });
         }
         return window.khaus[key] = '';
@@ -448,6 +398,11 @@
    * ==========================================================================
    */
   $.fn.khausForm = function(settings) {
+    var o;
+    o = $.extend({
+      onSuccess: function() {},
+      onError: function() {}
+    }, settings);
     return $.each(this, function() {
       var form;
       form = $(this);
@@ -470,7 +425,7 @@
                 $($form)[0].reset();
               }
               if ($.isArray(window.khaus.redirect)) {
-                return setTimeout(function() {
+                setTimeout(function() {
                   var location;
                   location = window.khaus.redirect[0];
                   if (!location.match(/^http:\/\//i)) {
@@ -479,7 +434,7 @@
                   return window.location = location;
                 }, window.khaus.redirect[1]);
               } else if ($.isPlainObject(window.khaus.redirect)) {
-                return $.each(window.khaus.redirect, function(url, tiempo) {
+                $.each(window.khaus.redirect, function(url, tiempo) {
                   return setTimeout(function() {
                     var location;
                     location = url;
@@ -494,9 +449,10 @@
                 if (!location.match(/^http:\/\//i)) {
                   location = window.baseURL + location;
                 }
-                return window.location = location;
+                window.location = location;
               }
             }
+            return o.onSuccess();
           },
           error: function(response, status, xhr, $form) {
             var errors;
@@ -506,12 +462,13 @@
             } else {
               errors = $.parseJSON(response.responseText);
             }
-            return $.khausDisplayFormErrors({
+            $.khausDisplayFormErrors({
               errorsType: form.data('khaus-errortype') || 'block',
               form: $form,
               errors: errors,
               resetForm: form.data('khaus-reset') || false
             });
+            return o.onError();
           }
         });
       });
@@ -634,7 +591,12 @@
   };
 })(jQuery);
 
-$(document).ready(function() {
+$(function() {
+  $.noty.defaults.theme = 'relax';
+  $.noty.defaults.layout = 'bottomRight';
+  $.noty.defaults.timeout = 8000;
+  $.noty.defaults.animation.open = 'animated bounceInRight';
+  $.noty.defaults.animation.close = 'animated bounceOutRight';
   $('form').khausAttachName();
   $.khausLaunchFormErrors();
   $.khausLaunchAlerts();
