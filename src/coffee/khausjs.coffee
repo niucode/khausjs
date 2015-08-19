@@ -1,47 +1,5 @@
 do ($=jQuery) ->
 
-
-    ### MULTIUPLOADER DE IMAGENES
-    # ==========================================================================
-    # Transforma un input file en un uploader multiple de imagenes con preview
-    # ==========================================================================
-    ###
-    $.fn.khausImageUploader = ()->
-        $.each @, (key, div)->
-            images = $(div).find('img.khaus-uploaded-thumb')
-            images.on 'click', ()->
-                filename = $(@).attr('src').split('/').pop()
-                $('<input>', type:'hidden', name:'khaus_delete_thumb[]', value:filename).appendTo div
-                $(@).remove()
-            input = $(div).find(':input[type=file]')
-            inputName = input.attr 'name'
-            input.removeAttr 'name'
-            input.on 'change', (ev)->
-                if $(@).val()
-                    $.each ev.target.files, (key, value)->
-                        if value.type.match('image.*')
-                            reader = new FileReader()
-                            reader.onload = ((file)->
-                                return (e)->
-                                    id = btoa($.now())
-                                    id = id.replace(/[^a-z]+/ig, '')
-                                    $('<input>', 
-                                        'class':id
-                                        'type':'hidden'
-                                        'name':inputName + '[]'
-                                        'value':e.target.result
-                                    ).prependTo div
-                                    $('<img>', 
-                                        'class':'khaus-upload-thumb'
-                                        'src':e.target.result
-                                    ).on('click', ()->
-                                        $('input.' + id + '').remove()
-                                        $(@).remove()
-                                    ).prependTo div
-                            )(value)
-                        reader.readAsDataURL(value);
-                    $(@).val ''
-
     ### LIMPIA LOS ERRORES DEL FORMULARIO BOOTSTRAP
     # ==========================================================================
     # @param DOMElement form - formulario
@@ -356,6 +314,10 @@ do ($=jQuery) ->
     # ==========================================================================
     ###
     $.fn.khausForm = (settings)->
+        o = $.extends(
+            onSuccess: ->
+            onError: ->
+        , settings)
         $.each @, ()->
             form = $(@)
             form.on 'submit', (ev)->
@@ -391,6 +353,7 @@ do ($=jQuery) ->
                                 if not location.match(/^http:\/\//i)
                                     location = window.baseURL + location;
                                 window.location = location
+                        o.onSuccess()
                     error: (response, status, xhr, $form)->
                         $.khausCleanFormErrors($form)
                         if typeof response.responseJSON isnt 'undefined'
@@ -403,6 +366,7 @@ do ($=jQuery) ->
                             errors: errors
                             resetForm: form.data('khaus-reset') || false
                         )
+                        o.onError()
 
 
 
