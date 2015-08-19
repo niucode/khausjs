@@ -400,6 +400,7 @@
   $.fn.khausForm = function(settings) {
     var o;
     o = $.extend({
+      onSubmit: function() {},
       onSuccess: function() {},
       onError: function() {}
     }, settings);
@@ -407,6 +408,7 @@
       var form;
       form = $(this);
       return form.on('submit', function(ev) {
+        onSubmit(form, ev);
         return form.ajaxForm({
           delegation: true,
           success: function(response, status, xhr, $form) {
@@ -452,7 +454,7 @@
                 window.location = location;
               }
             }
-            return o.onSuccess();
+            return o.onSuccess($form, ev, response);
           },
           error: function(response, status, xhr, $form) {
             var errors;
@@ -468,7 +470,7 @@
               errors: errors,
               resetForm: form.data('khaus-reset') || false
             });
-            return o.onError();
+            return o.onError($form, ev, response);
           }
         });
       });

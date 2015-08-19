@@ -277,12 +277,14 @@ do ($=jQuery) ->
     ###
     $.fn.khausForm = (settings)->
         o = $.extend(
+            onSubmit: ->
             onSuccess: ->
             onError: ->
         , settings)
         $.each @, ()->
             form = $(@)
             form.on 'submit', (ev)->
+                onSubmit(form, ev);
                 form.ajaxForm
                     delegation: true
                     success: (response, status, xhr, $form)->
@@ -315,7 +317,7 @@ do ($=jQuery) ->
                                 if not location.match(/^http:\/\//i)
                                     location = window.baseURL + location;
                                 window.location = location
-                        o.onSuccess()
+                        o.onSuccess($form, ev, response)
                     error: (response, status, xhr, $form)->
                         $.khausCleanFormErrors($form)
                         if typeof response.responseJSON isnt 'undefined'
@@ -328,7 +330,7 @@ do ($=jQuery) ->
                             errors: errors
                             resetForm: form.data('khaus-reset') || false
                         )
-                        o.onError()
+                        o.onError($form, ev, response)
 
 
 
