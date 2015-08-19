@@ -284,7 +284,7 @@ do ($=jQuery) ->
         $.each @, ()->
             form = $(@)
             form.on 'submit', (ev)->
-                onSubmit(form, ev);
+                o.onSubmit(form, ev);
                 form.ajaxForm
                     delegation: true
                     success: (response, status, xhr, $form)->

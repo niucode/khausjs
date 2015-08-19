@@ -408,7 +408,7 @@
       var form;
       form = $(this);
       return form.on('submit', function(ev) {
-        onSubmit(form, ev);
+        o.onSubmit(form, ev);
         return form.ajaxForm({
           delegation: true,
           success: function(response, status, xhr, $form) {
