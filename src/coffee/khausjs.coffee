@@ -36,10 +36,12 @@ do ($=jQuery) ->
                 if typeof window.khaus[key] isnt 'undefined'
                     window.khaus[key] = value
                     return true
+            if arr = key.match /\.([^.]+)/
+                key = key.replace(arr[0], "[#{arr[1]}]")
             counter++
-            input = $(o.form).find(":input[name=#{key}]")
-            if input.size() isnt 1 # si no lo encuentra busca inputs array[]
-                input = $(o.form).find(":input[name^='#{key}[']")
+            input = $(o.form).find(":input[name='#{key}']")
+            # if input.size() isnt 1 # si no lo encuentra busca inputs array[]
+            #    input = $(o.form).find(":input[name^='#{key}[']")
             input.parents('.form-group').addClass "has-error"
             # si el input se encuentra dentro del un formulario tabulado
             inTab = input.parents('.tab-content')
@@ -73,7 +75,7 @@ do ($=jQuery) ->
 
     ### MUESTRA LOS ERRORES ALMACENADOS EN LAS VARIABLES KHAUS
     # ==========================================================================
-    # 
+    #
     # ==========================================================================
     ###
     $.khausLaunchFormErrors = ()->
@@ -86,12 +88,12 @@ do ($=jQuery) ->
 
     ###
     # ==========================================================================
-    # 
+    #
     # ==========================================================================
     ###
     $.khausLaunchAlerts = (settings) ->
         o = $.extend
-            title : 
+            title :
                 default : ""
                 primary : ""
                 success : "El proceso ha finalizado"
@@ -123,7 +125,7 @@ do ($=jQuery) ->
 
     ###
     # ==========================================================================
-    # 
+    #
     # ==========================================================================
     ###
     $.khausAjaxWait = (settings)->
@@ -145,7 +147,7 @@ do ($=jQuery) ->
 
     ### ADJUNTA AL FORMULARIO EL PARAMETRO NAME
     # ==========================================================================
-    # Si el formulario tiene el atributo [name] activado 
+    # Si el formulario tiene el atributo [name] activado
     # antes de realizar el envio de los parametros
     # agrega un input hidden name="_name" value="<nombre del formulario>"
     # ==========================================================================
@@ -154,7 +156,7 @@ do ($=jQuery) ->
         $.each @, ()->
             $(@).on 'submit', (ev)->
                 if $(@).is('[name]') and $(@).find('input[name=_name]').size() is 0
-                    $('<input>', 
+                    $('<input>',
                         'name':'_name'
                         'type':'hidden'
                         'value':$(@).attr('name')
@@ -184,7 +186,7 @@ do ($=jQuery) ->
                     e.submit()
 
 
-    ### 
+    ###
     # ==========================================================================
     # Envia un modal de alerta con las opciones aceptar y cancelar
     # Metodos de llamada:
@@ -192,7 +194,7 @@ do ($=jQuery) ->
     # - por dom: <button data-khaus-alert="Mensaje" data-khaus-title="Opcional">
     # El titulo es opcional en la llamada por dom
     # ==========================================================================
-    ### 
+    ###
     $.khausAlert = (title, message) ->
         if $(".khaus-modal-alert").size() > 0
             $(".khaus-modal-alert").remove()
@@ -215,7 +217,7 @@ do ($=jQuery) ->
 
     ###
     # ==========================================================================
-    # 
+    #
     # ==========================================================================
     ###
     $.khausPrompt = (title, message, defaultValue = "", callback = ->) ->
@@ -238,13 +240,13 @@ do ($=jQuery) ->
                 return
             .appendTo modal_footer
         modal_D1.modal "show"
-        setTimeout -> 
+        setTimeout ->
             input_prompt.select()
         , 200
 
     ###
     # ==========================================================================
-    # 
+    #
     # ==========================================================================
     ###
     $.khausConfirm = (title, message, callback = ->) ->
@@ -272,7 +274,7 @@ do ($=jQuery) ->
 
     ### CAMBIA EL FUNCIONAMIENTO DE LOS FORMULARIOS POR PETICIONES AJAX
     # ==========================================================================
-    # 
+    #
     # ==========================================================================
     ###
     $.fn.khausForm = (settings)->
@@ -336,7 +338,7 @@ do ($=jQuery) ->
 
     ###
     # ==========================================================================
-    # 
+    #
     # ==========================================================================
     ###
     $.fn.khausNumberFormat = ()->
@@ -354,7 +356,7 @@ do ($=jQuery) ->
 
     ###
     # ==========================================================================
-    # 
+    #
     # ==========================================================================
     ###
     $.khausLoadSelect = ($select, url, fk, selected)->
@@ -387,7 +389,7 @@ do ($=jQuery) ->
 
     ###
     # ==========================================================================
-    # 
+    #
     # ==========================================================================
     ###
     $.fn.khausClone = ->
@@ -412,7 +414,7 @@ do ($=jQuery) ->
 
     ###
     # ==========================================================================
-    # 
+    #
     # ==========================================================================
     ###
     $.fn.khausRemoveParent = ->
@@ -423,7 +425,7 @@ do ($=jQuery) ->
                 target = $(this).parents(selector)
                 target.remove()
 
-    
+
 
 $ ->
     # noty defaults options

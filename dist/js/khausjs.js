@@ -32,7 +32,7 @@
     }, settings);
     counter = 0;
     $.each(o.errors, function(key, value) {
-      var badge, inTab, input, page, pageName, pos, tab;
+      var arr, badge, inTab, input, page, pageName, pos, tab;
       if (key.match(/^khaus/)) {
         key = key.replace('khaus', '').toLowerCase();
         if (typeof window.khaus[key] !== 'undefined') {
@@ -40,11 +40,11 @@
           return true;
         }
       }
-      counter++;
-      input = $(o.form).find(":input[name=" + key + "]");
-      if (input.size() !== 1) {
-        input = $(o.form).find(":input[name^='" + key + "[']");
+      if (arr = key.match(/\.([^.]+)/)) {
+        key = key.replace(arr[0], "[" + arr[1] + "]");
       }
+      counter++;
+      input = $(o.form).find(":input[name='" + key + "']");
       input.parents('.form-group').addClass("has-error");
       inTab = input.parents('.tab-content');
       if (inTab.size() > 0) {
@@ -87,7 +87,7 @@
 
   /* MUESTRA LOS ERRORES ALMACENADOS EN LAS VARIABLES KHAUS
    * ==========================================================================
-   * 
+   *
    * ==========================================================================
    */
   $.khausLaunchFormErrors = function() {
@@ -103,7 +103,7 @@
 
   /*
    * ==========================================================================
-   * 
+   *
    * ==========================================================================
    */
   $.khausLaunchAlerts = function(settings) {
@@ -152,7 +152,7 @@
 
   /*
    * ==========================================================================
-   * 
+   *
    * ==========================================================================
    */
   $.khausAjaxWait = function(settings) {
@@ -178,7 +178,7 @@
 
   /* ADJUNTA AL FORMULARIO EL PARAMETRO NAME
    * ==========================================================================
-   * Si el formulario tiene el atributo [name] activado 
+   * Si el formulario tiene el atributo [name] activado
    * antes de realizar el envio de los parametros
    * agrega un input hidden name="_name" value="<nombre del formulario>"
    * ==========================================================================
@@ -225,7 +225,7 @@
     });
   };
 
-  /* 
+  /*
    * ==========================================================================
    * Envia un modal de alerta con las opciones aceptar y cancelar
    * Metodos de llamada:
@@ -280,7 +280,7 @@
 
   /*
    * ==========================================================================
-   * 
+   *
    * ==========================================================================
    */
   $.khausPrompt = function(title, message, defaultValue, callback) {
@@ -342,7 +342,7 @@
 
   /*
    * ==========================================================================
-   * 
+   *
    * ==========================================================================
    */
   $.khausConfirm = function(title, message, callback) {
@@ -394,7 +394,7 @@
 
   /* CAMBIA EL FUNCIONAMIENTO DE LOS FORMULARIOS POR PETICIONES AJAX
    * ==========================================================================
-   * 
+   *
    * ==========================================================================
    */
   $.fn.khausForm = function(settings) {
@@ -479,7 +479,7 @@
 
   /*
    * ==========================================================================
-   * 
+   *
    * ==========================================================================
    */
   $.fn.khausNumberFormat = function() {
@@ -502,7 +502,7 @@
 
   /*
    * ==========================================================================
-   * 
+   *
    * ==========================================================================
    */
   $.khausLoadSelect = function($select, url, fk, selected) {
@@ -546,7 +546,7 @@
 
   /*
    * ==========================================================================
-   * 
+   *
    * ==========================================================================
    */
   $.fn.khausClone = function() {
@@ -577,7 +577,7 @@
 
   /*
    * ==========================================================================
-   * 
+   *
    * ==========================================================================
    */
   return $.fn.khausRemoveParent = function() {
