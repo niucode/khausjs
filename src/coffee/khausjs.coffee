@@ -109,15 +109,15 @@ do ($=jQuery) ->
                 if key is 'danger'
                     template = 'error'
                 if key is 'info'
-                    template = 'information'
+                    template = 'info'
                 if $.isPlainObject(window.khaus[key]) or $.isArray(window.khaus[key])
                     $.each window.khaus[key], (k, mensaje)->
-                        n = noty(
+                        new Noty(
                             text: mensaje
                             type: template
                         )
                 else
-                    n = noty(
+                    new Noty(
                         text: window.khaus[key]
                         type: template
                     )
@@ -429,11 +429,16 @@ do ($=jQuery) ->
 
 $ ->
     # noty defaults options
-    $.noty.defaults.theme = 'relax'
-    $.noty.defaults.layout = 'bottomRight'
-    $.noty.defaults.timeout = 8000
-    $.noty.defaults.animation.open = 'animated bounceInRight'
-    $.noty.defaults.animation.close = 'animated bounceOutRight'
+    Noty.overrideDefaults({
+        layout   : 'bottomRight',
+        theme    : 'relax',
+        timeout  : 8000,
+        closeWith: ['click', 'button'],
+        animation: {
+            open : 'animated bounceInRight',
+            close: 'animated bounceOutRight'
+        }
+    });
 
     $('form').khausAttachName()
     $.khausLaunchFormErrors()

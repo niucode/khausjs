@@ -119,7 +119,7 @@
       }
     }, settings);
     return $.each(o.title, function(key, value) {
-      var template;
+      var n, template;
       if (!!window.khaus[key]) {
         template = key;
         if (key === 'default') {
@@ -129,17 +129,18 @@
           template = 'error';
         }
         if (key === 'info') {
-          template = 'info';
+          template = 'information';
         }
         if ($.isPlainObject(window.khaus[key]) || $.isArray(window.khaus[key])) {
           $.each(window.khaus[key], function(k, mensaje) {
-            return new Noty({
+            var n;
+            return n = noty({
               text: mensaje,
               type: template
             });
           });
         } else {
-          new Noty({
+          n = noty({
             text: window.khaus[key],
             type: template
           });
@@ -593,16 +594,11 @@
 })(jQuery);
 
 $(function() {
-  Noty.overrideDefaults({
-    layout: 'bottomRight',
-    theme: 'relax',
-    timeout: 8000,
-    closeWith: ['click', 'button'],
-    animation: {
-      open: 'animated bounceInRight',
-      close: 'animated bounceOutRight'
-    }
-  });
+  $.noty.defaults.theme = 'relax';
+  $.noty.defaults.layout = 'bottomRight';
+  $.noty.defaults.timeout = 8000;
+  $.noty.defaults.animation.open = 'animated bounceInRight';
+  $.noty.defaults.animation.close = 'animated bounceOutRight';
   $('form').khausAttachName();
   $.khausLaunchFormErrors();
   $.khausLaunchAlerts();
