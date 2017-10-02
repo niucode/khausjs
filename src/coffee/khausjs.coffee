@@ -115,12 +115,12 @@ do ($=jQuery) ->
                         new Noty(
                             text: mensaje
                             type: template
-                        )
+                        ).show()
                 else
                     new Noty(
                         text: window.khaus[key]
                         type: template
-                    )
+                    ).show()
                 window.khaus[key] = ''
 
     ###
@@ -431,7 +431,7 @@ $ ->
     # noty defaults options
     Noty.overrideDefaults({
         layout   : 'bottomRight',
-        theme    : 'relax',
+        theme    : 'metroui',
         timeout  : 8000,
         closeWith: ['click', 'button'],
         animation: {
