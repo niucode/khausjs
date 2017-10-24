@@ -9,6 +9,7 @@
     $(form).find(".form-group").removeClass("has-error has-feedback");
     $(form).find("span.form-control-feedback").remove();
     $(form).find("span.help-block").remove();
+    $(form).find("span.form-control-feedback").remove();
     return $(form).find(":input").tooltip("destroy");
   };
 
@@ -46,8 +47,9 @@
       counter++;
       input = $(o.form).find(":input[name='" + key + "']");
       input.parents('.form-group').addClass("has-error");
+      input.parents('.form-group').addClass("has-feedback");
       inTab = input.parents('.tab-content');
-      if (inTab.size() > 0) {
+      if (inTab.length > 0) {
         if (counter === 1) {
           $('ul.nav-tabs .badge').remove();
         }
@@ -66,9 +68,12 @@
       switch (o.errorsType) {
         case 'block':
           pos = input.parents('.form-group');
-          return $("<span>", {
+          $("<span>", {
             "class": "help-block"
           }).html(value).appendTo(pos);
+          return $("<span>", {
+            "class": "glyphicon glyphicon-remove form-control-feedback"
+          }).appendTo(pos);
         case 'tooltip':
           return input.tooltip({
             placement: "top",
@@ -185,7 +190,7 @@
   $.fn.khausAttachName = function() {
     return $.each(this, function() {
       return $(this).on('submit', function(ev) {
-        if ($(this).is('[name]') && $(this).find('input[name=_name]').size() === 0) {
+        if ($(this).is('[name]') && $(this).find('input[name=_name]').length === 0) {
           return $('<input>', {
             'name': '_name',
             'type': 'hidden',
@@ -235,7 +240,7 @@
    */
   $.khausAlert = function(title, message) {
     var modal_D1, modal_D2, modal_D3, modal_body, modal_footer, modal_header;
-    if ($(".khaus-modal-alert").size() > 0) {
+    if ($(".khaus-modal-alert").length > 0) {
       $(".khaus-modal-alert").remove();
     }
     modal_D1 = $("<div>", {
@@ -290,7 +295,7 @@
     if (callback == null) {
       callback = function() {};
     }
-    if ($(".khaus-modal-prompt").size() > 0) {
+    if ($(".khaus-modal-prompt").length > 0) {
       $(".khaus-modal-prompt").remove();
     }
     modal_D1 = $("<div>", {
@@ -349,7 +354,7 @@
     if (callback == null) {
       callback = function() {};
     }
-    if ($(".khaus-modal-confirm").size() > 0) {
+    if ($(".khaus-modal-confirm").length > 0) {
       $(".khaus-modal-confirm").remove();
     }
     modal_D1 = $("<div>", {
@@ -456,17 +461,23 @@
             return o.onSuccess($form, ev, response);
           },
           error: function(response, status, xhr, $form) {
-            var errors;
+            var m;
             $.khausCleanFormErrors($form);
             if (typeof response.responseJSON !== 'undefined') {
-              errors = response.responseJSON;
+              m = response.responseJSON;
             } else {
-              errors = $.parseJSON(response.responseText);
+              m = $.parseJSON(response.responseText);
+            }
+            if (m.message) {
+              new Noty({
+                text: m.message,
+                type: 'error'
+              }).show();
             }
             $.khausDisplayFormErrors({
               errorsType: form.data('khaus-errortype') || 'block',
               form: $form,
-              errors: errors,
+              errors: m.errors,
               resetForm: form.data('khaus-reset') || false
             });
             return o.onError($form, ev, response);
@@ -514,7 +525,7 @@
         }).text(this.nombre).appendTo($select);
       });
       $select.removeAttr('disabled');
-      if ($select.find("option[value=" + selected + "]").size() > 0) {
+      if ($select.find("option[value=" + selected + "]").length > 0) {
         return $select.val(selected);
       } else {
         return $select.val($select.find('option:first').attr('value'));

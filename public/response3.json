@@ -1,4 +1,0 @@
-{
-	"khausSuccess" : ["Congratulaciones", "Usuario creado con exito"],
-	"khausRedirect" : ["http://localhost/khausjs/test/?exito=true", 100000]
-}

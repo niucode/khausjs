@@ -9,6 +9,7 @@ do ($=jQuery) ->
         $(form).find(".form-group").removeClass "has-error has-feedback"
         $(form).find("span.form-control-feedback").remove()
         $(form).find("span.help-block").remove()
+        $(form).find("span.form-control-feedback").remove()
         $(form).find(":input").tooltip "destroy"
 
 
@@ -40,12 +41,13 @@ do ($=jQuery) ->
                 key = key.replace(arr[0], "[#{arr[1]}]")
             counter++
             input = $(o.form).find(":input[name='#{key}']")
-            # if input.size() isnt 1 # si no lo encuentra busca inputs array[]
+            # if input.length isnt 1 # si no lo encuentra busca inputs array[]
             #    input = $(o.form).find(":input[name^='#{key}[']")
             input.parents('.form-group').addClass "has-error"
+            input.parents('.form-group').addClass "has-feedback"
             # si el input se encuentra dentro del un formulario tabulado
             inTab = input.parents('.tab-content')
-            if inTab.size() > 0
+            if inTab.length > 0
                 if counter is 1
                     $('ul.nav-tabs .badge').remove()
                 page = input.parents('.tab-pane')
@@ -61,6 +63,7 @@ do ($=jQuery) ->
                 when 'block'
                     pos = input.parents '.form-group'
                     $("<span>", "class":"help-block").html(value).appendTo pos
+                    $("<span>", "class":"glyphicon glyphicon-remove form-control-feedback").appendTo pos
                 when 'tooltip'
                     input.tooltip(
                         placement : "top"
@@ -155,7 +158,7 @@ do ($=jQuery) ->
     $.fn.khausAttachName = ()->
         $.each @, ()->
             $(@).on 'submit', (ev)->
-                if $(@).is('[name]') and $(@).find('input[name=_name]').size() is 0
+                if $(@).is('[name]') and $(@).find('input[name=_name]').length is 0
                     $('<input>',
                         'name':'_name'
                         'type':'hidden'
@@ -196,7 +199,7 @@ do ($=jQuery) ->
     # ==========================================================================
     ###
     $.khausAlert = (title, message) ->
-        if $(".khaus-modal-alert").size() > 0
+        if $(".khaus-modal-alert").length > 0
             $(".khaus-modal-alert").remove()
         modal_D1 = $("<div>", "class":"modal fade khaus-modal-alert")
         modal_D2 = $("<div>", "class":"modal-dialog").appendTo modal_D1
@@ -221,7 +224,7 @@ do ($=jQuery) ->
     # ==========================================================================
     ###
     $.khausPrompt = (title, message, defaultValue = "", callback = ->) ->
-        if $(".khaus-modal-prompt").size() > 0
+        if $(".khaus-modal-prompt").length > 0
             $(".khaus-modal-prompt").remove()
         modal_D1 = $("<div>", "class":"modal fade khaus-modal-prompt")
         modal_D2 = $("<div>", "class":"modal-dialog").appendTo modal_D1
@@ -250,7 +253,7 @@ do ($=jQuery) ->
     # ==========================================================================
     ###
     $.khausConfirm = (title, message, callback = ->) ->
-        if $(".khaus-modal-confirm").size() > 0
+        if $(".khaus-modal-confirm").length > 0
             $(".khaus-modal-confirm").remove()
         modal_D1 = $("<div>", "class":"modal fade khaus-modal-confirm")
         modal_D2 = $("<div>", "class":"modal-dialog").appendTo modal_D1
@@ -323,13 +326,15 @@ do ($=jQuery) ->
                     error: (response, status, xhr, $form)->
                         $.khausCleanFormErrors($form)
                         if typeof response.responseJSON isnt 'undefined'
-                            errors = response.responseJSON
+                            m = response.responseJSON
                         else
-                            errors = $.parseJSON(response.responseText)
+                            m = $.parseJSON(response.responseText)
+                        if m.message
+                            new Noty(text: m.message, type: 'error').show()
                         $.khausDisplayFormErrors(
                             errorsType: form.data('khaus-errortype') || 'block'
                             form: $form
-                            errors: errors
+                            errors: m.errors
                             resetForm: form.data('khaus-reset') || false
                         )
                         o.onError($form, ev, response)
@@ -366,7 +371,7 @@ do ($=jQuery) ->
             $.each r, ->
                 $('<option>', value:@id).text(@nombre).appendTo $select
             $select.removeAttr 'disabled'
-            if $select.find("option[value=#{selected}]").size() > 0
+            if $select.find("option[value=#{selected}]").length > 0
                 $select.val selected
             else
                 $select.val($select.find('option:first').attr('value'))
