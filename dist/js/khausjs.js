@@ -434,7 +434,7 @@
                 setTimeout(function() {
                   var location;
                   location = window.khaus.redirect[0];
-                  if (!location.match(/^http:\/\//i)) {
+                  if (!location.match(/^https?:\/\//i)) {
                     location = window.baseURL + location;
                   }
                   return window.location = location;
@@ -444,7 +444,7 @@
                   return setTimeout(function() {
                     var location;
                     location = url;
-                    if (!location.match(/^http:\/\//i)) {
+                    if (!location.match(/^https?:\/\//i)) {
                       location = window.baseURL + location;
                     }
                     return window.location = location;
@@ -452,7 +452,7 @@
                 });
               } else {
                 location = window.khaus.redirect;
-                if (!location.match(/^http:\/\//i)) {
+                if (!location.match(/^https?:\/\//i)) {
                   location = window.baseURL + location;
                 }
                 window.location = location;
