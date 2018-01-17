@@ -305,7 +305,7 @@ do ($=jQuery) ->
                             if $.isArray(window.khaus.redirect)
                                 setTimeout(->
                                     location = window.khaus.redirect[0]
-                                    if not location.match(/^http:\/\//i)
+                                    if not location.match(/^https?:\/\//i)
                                         location = window.baseURL + location;
                                     window.location = location
                                 , window.khaus.redirect[1])
@@ -313,13 +313,13 @@ do ($=jQuery) ->
                                 $.each window.khaus.redirect, (url, tiempo)->
                                     setTimeout(->
                                         location = url
-                                        if not location.match(/^http:\/\//i)
+                                        if not location.match(/^https?:\/\//i)
                                             location = window.baseURL + location;
                                         window.location = location
                                     , tiempo)
                             else
                                 location = window.khaus.redirect
-                                if not location.match(/^http:\/\//i)
+                                if not location.match(/^https?:\/\//i)
                                     location = window.baseURL + location;
                                 window.location = location
                         o.onSuccess($form, ev, response)
